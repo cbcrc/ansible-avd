@@ -1,0 +1,4 @@
+{# leaf loopback interface #}
+  Loopback0:
+    description: RID and RP
+    ip_address: "{{ loopback_network_summary.split('.')[0:3] | join('.') }}.{{ansible_host.split('.')[3]}}/32"

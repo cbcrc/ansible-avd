@@ -1,0 +1,16 @@
+{# Leaf bgp peer groups configuration #}
+{% if type == "spine_red" %}
+    EBGP_RED_LEAVES:
+      type: ipv4
+      peer_filter: LEAF-AS-RANGE
+      password: "{{ bgp_peer_groups.EBGP_RED_LEAVES.password }}"
+      maximum_routes: 12000
+      send_community: true
+{% elif type == "spine_blue" %}
+    EBGP_BLUE_LEAVES:
+      type: ipv4
+      peer_filter: LEAF-AS-RANGE
+      password: "{{ bgp_peer_groups.EBGP_BLUE_LEAVES.password }}"
+      maximum_routes: 12000
+      send_community: true
+{% endif %}

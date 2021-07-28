@@ -1,0 +1,84 @@
+### {{ inventory_hostname }} ###
+{# set leaf variables #}
+{% set switch = namespace() %}
+{% set spiner = namespace() %}
+
+{% set spiner.bgp_as = spine.spine_red.bgp_as %}
+{% set switch.platform = leaf.leaf_red.nodes[inventory_hostname].platform %}
+{% set switch.mgmt_ip = leaf.leaf_red.nodes[inventory_hostname].mgmt_ip %}
+{% set switch.id = leaf.leaf_red.nodes[inventory_hostname].id %}
+{% set switch.ptp_priority1 = leaf.leaf_red.ptp_priority1 %}
+{% set switch.bgp_as = leaf.leaf_red.nodes[inventory_hostname].bgp_as %}
+{% set switch.spine_interfaces = leaf.leaf_red.nodes[inventory_hostname].spine_interfaces %}
+{% set switch.spines = leaf.leaf_red.nodes[inventory_hostname].spines %}
+{% set switch.uplink_to_spine_interfaces = leaf.leaf_red.nodes[inventory_hostname].uplink_to_spine_interfaces %}
+{% set switch.p2p_ip_addresses = leaf.leaf_red.nodes[inventory_hostname].p2p_ip_addresses %}
+{% set switch.p2p_link_interface_speed = leaf.leaf_red.nodes[inventory_hostname].p2p_link_interface_speed %}
+
+### Leaf Info ###
+switch_platform: '{{ switch.platform }}'
+switch_mgmt_ip: {{ switch.mgmt_ip }}
+switch_bgp_as: {{ switch.bgp_as }}
+switch_id: {{ switch.id }}
+
+{# local users #}
+### local users ###
+{% include 'base/local-users.j2' %}
+
+{# clock timezone #}
+### Clock Timezone ###
+{% include 'base/clock.j2' %}
+
+{# Management Interfaces #}
+### Management Interfaces ###
+{% include 'base/management-interfaces.j2' %}
+
+{# Daemon TerminAttr #}
+### Daemon TerminAttr
+{% include 'base/daemon-terminattr.j2' %}
+
+### Platform Settings ###
+### Redundancy ###
+{% include 'base/platform-settings-redundancy.j2' %}
+### TCAM ###
+{% include 'base/platform-settings-tcam.j2' %}
+### Hardware Counters ###
+{% include 'base/platform-settings-hardware-counters.j2' %}
+### Speed Groups ###
+{% include 'base/platform-settings-speed-groups.j2' %}
+
+{# ptp #}
+### PTP ###
+{% include 'fabric/ptp/ptp.j2' %}
+
+### Ethernet Interfaces ###
+ethernet_interfaces:
+{# Point-to-Point Interfaces to Spine Switches #}
+{% include 'fabric/interfaces/leaf-p2p-interfaces.j2'%}
+{# Connected Endpoints #}
+{% include 'endpoints/ethernet-interfaces.j2'%}
+{# Connected Endpoints - Host var #}
+{% include 'endpoints/ethernet_interfaces-host-var.j2'%}
+
+{# BGP Configuration #}
+### Routing - BGP ###
+router_bgp:
+{% include 'fabric/bgp_base/leaf-bgp-base.j2' %}
+  peer_groups:
+{% include 'fabric/bgp_base/leaf-bgp-peer-groups.j2' %}
+  neighbors:
+{% include 'fabric/bgp_base/leaf-bgp-neighbors.j2' %}
+  redistribute_routes:
+{% include 'fabric/bgp_base/leaf-bgp-redistribute-routes.j2' %}
+  address_family_ipv4_multicast:
+{% include 'fabric/bgp_base/leaf-bgp-address-family-ipv4_mcast.j2' %}
+{% include 'fabric/bgp_base/leaf-bgp-address-family-ipv4-mcast-redistribute-routes.j2' %}
+
+{# Multicast #}
+### Multicast - RP ###
+router_pim_sparse_mode:
+  ipv4:
+    rp_addresses:
+{% include 'fabric/multicast/fabric-rp.j2' %}
+
+

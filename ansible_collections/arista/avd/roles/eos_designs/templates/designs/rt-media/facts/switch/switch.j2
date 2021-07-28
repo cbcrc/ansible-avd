@@ -1,0 +1,17 @@
+switch:
+  platform: {{ switch_data.platform }}
+  mgmt_ip: {{ switch_data.mgmt_ip }}
+  bgp_as: {{ switch_data.bgp_as }}
+  id: {{ switch_data.id }}
+  ptp_priority1: {{ switch_data.ptp_priority1 }}
+  bgp_as: {{ switch_data.bgp_as }}
+  spine_interfaces: {{ switch_data.spine_interfaces }}
+  spines: {{ switch_data.spines }}
+  uplink_to_spine_interfaces: {{ switch_data.uplink_to_spine_interfaces }}
+  p2p_ip_addresses: {{ switch_data.p2p_ip_addresses }}
+  p2p_link_interface_speed: {{ switch_data.p2p_link_interface_speed }}
+spineb:
+  bgp_as: {{ spineb_data.bgp_as | arista.avd.default() }}
+spiner:
+  bgp_as: {{ spiner_data.bgp_as | arista.avd.default() }}
+

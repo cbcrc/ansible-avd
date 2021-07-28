@@ -1,0 +1,22 @@
+{# Leaf bgp neighbors configuration #}
+{% if type == "leaf_red" %}
+{%   for uplink_to_spine_interface in switch.uplink_to_spine_interfaces %}
+    {{ switch.p2p_ip_addresses[loop.index0] | ipaddr('peer') }}:
+      peer_group: EBGP-RED-SPINE
+{%   endfor %}
+{% elif type == "leaf_blue" %}
+{%   for uplink_to_spine_interface in switch.uplink_to_spine_interfaces %}
+    {{ switch.p2p_ip_addresses[loop.index0] | ipaddr('peer') }}:
+      peer_group: EBGP-BLUE-SPINE
+{%   endfor %}
+{% elif type == "leaf_purple" %}
+{%   for uplink_to_spine_interface in switch.uplink_to_spine_interfaces %}
+{%     if loop.index <= 2 %}
+    {{ switch.p2p_ip_addresses[loop.index0] | ipaddr('peer') }}:
+      peer_group: EBGP-RED-SPINE
+{%     else %}
+    {{ switch.p2p_ip_addresses[loop.index0] | ipaddr('peer') }}:
+      peer_group: EBGP-BLUE-SPINE
+{%     endif %}
+{%   endfor %}
+{% endif %}

@@ -1,0 +1,7 @@
+{# set leaf variables #}
+{% set switch = namespace() %}
+{% set spineb = namespace() %}
+
+{% set switch.uplink_to_spine_interfaces = leaf.leaf_blue.nodes[inventory_hostname].uplink_to_spine_interfaces %}
+{% set switch.p2p_ip_addresses = leaf.leaf_blue.nodes[inventory_hostname].p2p_ip_addresses %}
+{% set switch.p2p_link_interface_speed = leaf.leaf_blue.nodes[inventory_hostname].p2p_link_interface_speed %}

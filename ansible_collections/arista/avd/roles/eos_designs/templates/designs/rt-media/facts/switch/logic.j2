@@ -1,0 +1,72 @@
+{# set leaf variables #}
+
+{% if type is arista.avd.defined and type =='leaf_blue' %}
+{% set spineb_data.bgp_as = spine.spine_blue.bgp_as %}
+{% set switch_data.platform = leaf.leaf_blue.nodes[inventory_hostname].platform %}
+{% set switch_data.mgmt_ip = leaf.leaf_blue.nodes[inventory_hostname].mgmt_ip %}
+{% set switch_data.id = leaf.leaf_blue.nodes[inventory_hostname].id %}
+{% set switch_data.ptp_priority1 = leaf.leaf_blue.ptp_priority1 %}
+{% set switch_data.bgp_as = leaf.leaf_blue.nodes[inventory_hostname].bgp_as %}
+{% set switch_data.spine_interfaces = leaf.leaf_blue.nodes[inventory_hostname].spine_interfaces %}
+{% set switch_data.spines = leaf.leaf_blue.nodes[inventory_hostname].spines %}
+{% set switch_data.uplink_to_spine_interfaces = leaf.leaf_blue.nodes[inventory_hostname].uplink_to_spine_interfaces %}
+{% set switch_data.p2p_ip_addresses = leaf.leaf_blue.nodes[inventory_hostname].p2p_ip_addresses %}
+{% set switch_data.p2p_link_interface_speed = leaf.leaf_blue.nodes[inventory_hostname].p2p_link_interface_speed %}
+{%     endif %}
+
+{% if type is arista.avd.defined and type =='leaf_red' %}
+{% set spiner_data.bgp_as = spine.spine_red.bgp_as %}
+{% set switch_data.platform = leaf.leaf_red.nodes[inventory_hostname].platform %}
+{% set switch_data.mgmt_ip = leaf.leaf_red.nodes[inventory_hostname].mgmt_ip %}
+{% set switch_data.id = leaf.leaf_red.nodes[inventory_hostname].id %}
+{% set switch_data.ptp_priority1 = leaf.leaf_red.ptp_priority1 %}
+{% set switch_data.bgp_as = leaf.leaf_red.nodes[inventory_hostname].bgp_as %}
+{% set switch_data.spine_interfaces = leaf.leaf_red.nodes[inventory_hostname].spine_interfaces %}
+{% set switch_data.spines = leaf.leaf_red.nodes[inventory_hostname].spines %}
+{% set switch_data.uplink_to_spine_interfaces = leaf.leaf_red.nodes[inventory_hostname].uplink_to_spine_interfaces %}
+{% set switch_data.p2p_ip_addresses = leaf.leaf_red.nodes[inventory_hostname].p2p_ip_addresses %}
+{% set switch_data.p2p_link_interface_speed = leaf.leaf_red.nodes[inventory_hostname].p2p_link_interface_speed %}
+{%     endif %}
+
+{% if type is arista.avd.defined and type =='leaf_purple' %}
+{% set spineb_data.bgp_as = spine.spine_blue.bgp_as %}
+{% set spiner_data.bgp_as = spine.spine_red.bgp_as %}
+{% set switch_data.platform = leaf.leaf_purple.nodes[inventory_hostname].platform %}
+{% set switch_data.mgmt_ip = leaf.leaf_purple.nodes[inventory_hostname].mgmt_ip %}
+{% set switch_data.id = leaf.leaf_purple.nodes[inventory_hostname].id %}
+{% set switch_data.ptp_priority1 = leaf.leaf_purple.ptp_priority1 %}
+{% set switch_data.bgp_as = leaf.leaf_purple.nodes[inventory_hostname].bgp_as %}
+{% set switch_data.spine_interfaces = leaf.leaf_purple.nodes[inventory_hostname].spine_interfaces %}
+{% set switch_data.spines = leaf.leaf_purple.nodes[inventory_hostname].spines %}
+{% set switch_data.uplink_to_spine_interfaces = leaf.leaf_purple.nodes[inventory_hostname].uplink_to_spine_interfaces %}
+{% set switch_data.p2p_ip_addresses = leaf.leaf_purple.nodes[inventory_hostname].p2p_ip_addresses %}
+{% set switch_data.p2p_link_interface_speed = leaf.leaf_purple.nodes[inventory_hostname].p2p_link_interface_speed %}
+{%     endif %}
+
+{% if type is arista.avd.defined and type =='spine_blue' %}
+{% set spineb_data.bgp_as = spine.spine_blue.bgp_as %}
+{% set spiner_data.bgp_as = spine.spine_red.bgp_as %}
+{% set switch_data.ptp_priority1 = spine.spine_blue.ptp_priority1 %}
+{% set switch_data.bgp_as = spine.spine_blue.bgp_as %}
+{% set switch_data.platform = spine.spine_blue.nodes[inventory_hostname].platform %}
+{% set switch_data.mgmt_ip = spine.spine_blue.nodes[inventory_hostname].mgmt_ip %}
+{% set switch_data.id = spine.spine_blue.nodes[inventory_hostname].id %}
+{% set switch_data.ptp_interfaces = spine.spine_blue.nodes[inventory_hostname].ptp_interfaces %}
+{% set switch_data.ptp_peer_devices = spine.spine_blue.nodes[inventory_hostname].ptp_peer_devices %}
+{% set switch_data.ptp_peer_interfaces = spine.spine_blue.nodes[inventory_hostname].ptp_peer_interfaces %}
+{% set switch_data.ptp_link_interface_speed = spine.spine_blue.nodes[inventory_hostname].ptp_link_interface_speed %}
+{%     endif %}
+
+{% if type is arista.avd.defined and type =='spine_red' %}
+{% set spineb_data.bgp_as = spine.spine_blue.bgp_as %}
+{% set spiner_data.bgp_as = spine.spine_red.bgp_as %}
+{% set switch_data.ptp_priority1 = spine.spine_red.ptp_priority1 %}
+{% set switch_data.bgp_as = spine.spine_red.bgp_as %}
+{% set switch_data.platform = spine.spine_red.nodes[inventory_hostname].platform %}
+{% set switch_data.mgmt_ip = spine.spine_red.nodes[inventory_hostname].mgmt_ip %}
+{% set switch_data.id = spine.spine_red.nodes[inventory_hostname].id %}
+{% set switch_data.ptp_interfaces = spine.spine_red.nodes[inventory_hostname].ptp_interfaces %}
+{% set switch_data.ptp_peer_devices = spine.spine_red.nodes[inventory_hostname].ptp_peer_devices %}
+{% set switch_data.ptp_peer_interfaces = spine.spine_red.nodes[inventory_hostname].ptp_peer_interfaces %}
+{% set switch_data.ptp_link_interface_speed = spine.spine_red.nodes[inventory_hostname].ptp_link_interface_speed %}
+{%     endif %}

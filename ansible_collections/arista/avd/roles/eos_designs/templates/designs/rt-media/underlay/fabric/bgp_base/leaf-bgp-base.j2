@@ -1,0 +1,10 @@
+{# Leaf bgp configuration #}
+  as: {{ switch.bgp_as }}
+  router_id: "{{ loopback_network_summary.split('.')[0:3] | join('.') }}.{{ansible_host.split('.')[3]}}"
+  bgp_defaults:
+{%for bgp_default in leaf_bgp_defaults %}
+    - {{ bgp_default }}
+{%endfor %}
+{%if bgp_maximum_paths is defined and bgp_maximum_paths is not none and bgp_ecmp is defined and bgp_ecmp is not none %}
+    - maximum-paths {{ bgp_maximum_paths }} ecmp {{ bgp_ecmp }}
+{%endif %}

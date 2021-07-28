@@ -1,0 +1,29 @@
+{# Leaf bgp peer groups configuration #}
+{% if type == "leaf_red" %}
+    EBGP-RED-SPINE:
+      type: ipv4
+      remote_as: {{ spiner.bgp_as }}
+      password: "{{ bgp_peer_groups.EBGP_RED_SPINE.password }}"
+      maximum_routes: 12000
+      send_community: all
+{% elif type == "leaf_blue" %}
+    EBGP-BLUE-SPINE:
+      type: ipv4
+      remote_as: {{ spineb.bgp_as }}
+      password: "{{ bgp_peer_groups.EBGP_BLUE_SPINE.password }}"
+      maximum_routes: 12000
+      send_community: all
+{% elif type == "leaf_purple" %}
+    EBGP-RED-SPINE:
+      type: ipv4
+      remote_as: {{ spiner.bgp_as }}
+      password: "{{ bgp_peer_groups.EBGP_RED_SPINE.password }}"
+      maximum_routes: 12000
+      send_community: all
+    EBGP-BLUE-SPINE:
+      type: ipv4
+      remote_as: {{ spineb.bgp_as }}
+      password: "{{ bgp_peer_groups.EBGP_BLUE_SPINE.password }}"
+      maximum_routes: 12000
+      send_community: all
+{% endif %}

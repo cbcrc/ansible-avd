@@ -1,0 +1,24 @@
+{# Leaf P2P interfaces #}
+{% for uplink_to_spine_interface in switch.uplink_to_spine_interfaces %}
+  {{ uplink_to_spine_interface }}:
+    peer: {{ switch.spines[loop.index0] }}
+    peer_interface: {{ switch.spine_interfaces[loop.index0] }}
+    peer_type: spine
+    description: P2P_LINK_TO_{{ switch.spines[loop.index0] | upper }}_{{ switch.spine_interfaces[loop.index0] }}
+{%     if switch.p2p_link_interface_speed is defined %}
+    speed: {{ switch.p2p_link_interface_speed }}
+{%     endif %}
+    mtu: {{ p2p_uplinks_mtu }}
+    type: routed
+    ip_address: {{ switch.p2p_ip_addresses[loop.index0] }}
+    pim:
+      ipv4:
+        sparse_mode: true
+    ptp:
+      enable: true
+      announce:
+        interval: 0
+      delay_req: -3
+      sync_message:
+        interval: -3
+{% endfor %}

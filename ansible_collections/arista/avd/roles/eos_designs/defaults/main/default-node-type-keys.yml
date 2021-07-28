@@ -25,3 +25,14 @@ default_node_type_keys:
     overlay_controller:
       type: overlay-controller
       default_evpn_role: server
+  "rt-media":
+    leaf_blue:
+      type: leaf_blue
+    leaf_purple:
+      type: leaf_purple
+    leaf_red:
+      type: leaf_red
+    spine_blue:
+      type: spine_blue
+    spine_red:
+      type: spine_red

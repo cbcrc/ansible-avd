@@ -1,0 +1,10 @@
+{# leaf - address family ipv4 activation #}
+{% if type == "spine_red" %}
+    peer_groups:
+       EBGP-RED--LEAVES:
+        activate: true
+{% elif type == "spine_blue" %}
+    peer_groups:
+       EBGP-BLUE--LEAVES:
+        activate: true
+{% endif %}

@@ -1,0 +1,8 @@
+loopback_interfaces:
+{% if switch.router_id is arista.avd.defined %}
+{# BGP Loopback #}
+  Loopback0:
+    description: EVPN_Overlay_Peering
+    shutdown: false
+    ip_address: {{ switch.router_id }}/32
+{% endif %}
