@@ -81,8 +81,7 @@ switch:
   uplink_switch_interfaces: {{ switch_data.combined.uplink_switch_interfaces | arista.avd.default() }}
 
 {# switch.p2p_ip_addresses #}
-{% set switch_p2p_ip_addresses = switch_data.combined.p2p_ip_addresses | arista.avd.default() %}
-  uplink_switches: {{ switch_p2p_ip_addresses }}
+  p2p_ip_addresses: {{ switch_data.combined.p2p_ip_addresses | arista.avd.default() }}
 
 {# switch.uplink_interfaces #}
   uplink_interfaces: {{ switch_data.combined.uplink_interfaces | arista.avd.default() }}

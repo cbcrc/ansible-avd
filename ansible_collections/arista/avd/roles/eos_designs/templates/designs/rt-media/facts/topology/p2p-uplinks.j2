@@ -28,9 +28,9 @@ topology:
       ipv6_enable: true
 {%         else %}
 {%             set uplink_switch_index = loop.index0 %}
-      ip_address: {% include switch.ip_addressing.p2p_uplinks_ip %}
+      ip_address: {{ switch.p2p_ip_addresses[loop.index0] }}
 
-      peer_ip_address: {% include switch.ip_addressing.p2p_uplinks_peer_ip %}
+      peer_ip_address: {{ switch.p2p_ip_addresses[loop.index0] | ipaddr('peer') }}
 
 {%         endif %}
 {%     endif %}
