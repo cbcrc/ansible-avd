@@ -108,6 +108,8 @@ connected_endpoints_keys:
     type: load_balancer
   storage_arrays:
     type: storage_array
+  end_points:
+    type: end_points
 
 #custom_structured_configuration_prefix allows the user to customize the prefix for Custom Structured Configuration variables.
 custom_structured_configuration_prefix: custom_structured_configuration_

@@ -1,9 +1,0 @@
-{% if ptp.enable is true %}
-ptp:
-  source:
-    ip: "{{loopback_address}}"
-  priority1: "{{ switch.ptp_priority1 }}"
-  priority2: "{{ ansible_host.split('.')[3] }}"
-  domain: 127
-  mode: boundary
-{% endif %}

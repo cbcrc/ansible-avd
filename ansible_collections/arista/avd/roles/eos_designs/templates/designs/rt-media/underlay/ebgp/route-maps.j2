@@ -1,9 +1,35 @@
 {# Leaf and Spine route-maps for the underlay#}
 route_maps:
-  RM-CONN-2-BGP:
+  RM-SET-COMMUNITY-ROUTES:
     sequence_numbers:
       10:
         type: permit
         match:
-          - "ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY"
+          - "ip address prefix-list PL-RED"
+        set:
+          - "community 65{{ bid | my_zfill(3) }}:201"
+      20:
+        type: permit
+        match:
+          - "ip address prefix-list PL-BLUE"
+        set:
+          - "community 65{{ bid | my_zfill(3) }}:202"
+      30:
+        type: permit
+        match:
+          - "ip address prefix-list PL-PURPLE"
+        set:
+          - "community 65{{ bid | my_zfill(3) }}:203"
+      40:
+        type: permit
+        match:
+          - "ip address prefix-list PL-CTRL"
+        set:
+          - "community 65{{ bid | my_zfill(3) }}:204"
+      50:
+        type: permit
+        match:
+          - "ip address prefix-list PL-INFRA"
+        set:
+          - "community 65{{ bid | my_zfill(3) }}:205"
 {# SEQ 20 is set by inband management if applicable, so avoid setting that here #}

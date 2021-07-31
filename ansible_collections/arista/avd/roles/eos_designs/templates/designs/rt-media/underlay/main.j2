@@ -1,30 +1,28 @@
 {# Add one blank line after each included template #}
-### prefix-lists ###
-prefix_lists:
-{% include 'fabric/bgp_base/fabric-prefix-lists.j2' %}
+{% set underlay_data = namespace() %}
+{% include 'designs/rt-media/underlay/logic.j2' %}
 
-{# route maps #}
-### route-maps ###
-route_maps:
-{% include 'fabric/bgp_base/fabric-route-maps.j2' %}
+{% include 'designs/rt-media/underlay/interfaces/ethernet-interfaces.j2' %}
 
-{# BGP Configuration #}
-### Routing - BGP ###
-router_bgp:
-{% include 'fabric/bgp_base/leaf-bgp-base.j2' %}
-  peer_groups:
-{% include 'fabric/bgp_base/leaf-bgp-peer-groups.j2' %}
-  neighbors:
-{% include 'fabric/bgp_base/leaf-bgp-neighbors.j2' %}
-  redistribute_routes:
-{% include 'fabric/bgp_base/leaf-bgp-redistribute-routes.j2' %}
-  address_family_ipv4_multicast:
-{% include 'fabric/bgp_base/leaf-bgp-address-family-ipv4_mcast.j2' %}
-{% include 'fabric/bgp_base/leaf-bgp-address-family-ipv4-mcast-redistribute-routes.j2' %}
+{% include 'designs/rt-media/underlay/interfaces/port-channel-interfaces.j2' %}
 
-{# Multicast #}
-### Multicast - RP ###
-router_pim_sparse_mode:
-  ipv4:
-    rp_addresses:
-{% include 'fabric/multicast/fabric-rp.j2' %}
+{# EBGP #}
+{% if switch.underlay_router is arista.avd.defined(true) %}
+{% include 'designs/rt-media/underlay/interfaces/loopback-interfaces.j2' %}
+
+{%     if switch.underlay_routing_protocol == "ebgp" %}
+
+{%         if type == "leaf_red" %}
+{%             include 'designs/rt-media/underlay/ebgp/router-bgp-leaf-red.j2'%}
+{%         else %}
+{%             include 'designs/rt-media/underlay/ebgp/router-bgp.j2'%}
+{%         endif %}
+
+{%             include 'designs/rt-media/underlay/ebgp/prefix-lists.j2' %}
+
+{%             include 'designs/rt-media/underlay/ebgp/route-maps.j2' %}
+
+{%             include 'designs/rt-media/underlay/ebgp/community-lists.j2' %}
+
+{%     endif %}
+{% endif %}

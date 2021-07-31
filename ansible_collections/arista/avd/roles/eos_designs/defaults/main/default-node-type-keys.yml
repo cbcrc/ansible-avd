@@ -28,11 +28,16 @@ default_node_type_keys:
   "rt-media":
     leaf_blue:
       type: leaf_blue
+      connected_endpoints: true
     leaf_purple:
       type: leaf_purple
+      connected_endpoints: true
     leaf_red:
       type: leaf_red
+      connected_endpoints: true
     spine_blue:
       type: spine_blue
+      connected_endpoints: true
     spine_red:
       type: spine_red
+      connected_endpoints: true

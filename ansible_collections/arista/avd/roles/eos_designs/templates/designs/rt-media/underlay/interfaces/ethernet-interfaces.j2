@@ -17,8 +17,16 @@ ethernet_interfaces:
     service_profile: {{ p2p_uplinks_qos_profile }}
 {%         endif %}
 {%         if link.ptp is arista.avd.defined %}
+    pim:
+      ipv4:
+        sparse_mode: true
     ptp:
-      enable: {{ link.ptp }}
+      enable: true
+      announce:
+        interval: 0
+      delay_req: -3
+      sync_message:
+        interval: -3
 {%         endif %}
     type: routed
     shutdown: false

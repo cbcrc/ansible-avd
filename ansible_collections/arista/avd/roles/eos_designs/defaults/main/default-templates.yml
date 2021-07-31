@@ -46,7 +46,7 @@ default_templates:
   rt-media:
     facts:
       # Set general "switch.*" variables
-      # - template: "facts/main.j2"
+      - template: "facts/main.j2"
       # Set design specific "switch.*" variables
       - template: "designs/rt-media/facts/switch/main.j2"
     topology_facts:
@@ -55,11 +55,11 @@ default_templates:
     structured_config:
       # Render Strucured Configuration
       # Base features
-      # - template: "base/main.j2"
+      - template: "base/main.j2"
       # Underlay feature
       - template: "designs/rt-media/underlay/main.j2"
       # Connected Endpoints feature
-      - template: "connected_endpoints/main.j2"
+      - template: "connected_endpoints/ethernet_interfaces-host-var.j2"
       # Inband Management feature
       - template: "inband_management/main.j2"
       # Merge custom_structured_configuration last
@@ -68,6 +68,6 @@ default_templates:
           list_merge: "{{ custom_structured_configuration_list_merge }}"
           strip_empty_keys: false
     ip_addressing:
-      router_id: 'designs/l3ls-evpn/ip-addressing/router-id.j2'
-      p2p_uplinks_ip: 'designs/l3ls-evpn/ip-addressing/p2p-uplinks-ip.j2'
-      p2p_uplinks_peer_ip: 'designs/l3ls-evpn/ip-addressing/p2p-uplinks-peer-ip.j2'
+      router_id: 'designs/rt-media/ip-addressing/router-id.j2'
+      p2p_uplinks_ip: 'designs/rt-media/ip-addressing/p2p-uplinks-ip.j2'
+      p2p_uplinks_peer_ip: 'designs/rt-media/ip-addressing/p2p-uplinks-peer-ip.j2'
