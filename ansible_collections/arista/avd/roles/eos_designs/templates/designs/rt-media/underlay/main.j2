@@ -14,6 +14,8 @@
 
 {%         if type == "leaf_red" %}
 {%             include 'designs/rt-media/underlay/ebgp/router-bgp-leaf-red.j2'%}
+{%         elif type == "leaf_blue" %}
+{%             include 'designs/rt-media/underlay/ebgp/router-bgp-leaf-blue.j2'%}
 {%         else %}
 {%             include 'designs/rt-media/underlay/ebgp/router-bgp.j2'%}
 {%         endif %}

@@ -2,9 +2,9 @@
 {## Underlay network peerings #}
 router_bgp:
   peer_groups:
-    {{ bgp_peer_groups.EBGP_RED_SPINE.name | arista.avd.default("EBGP-RED-SPINE") }}:
+    {{ bgp_peer_groups.EBGP_BLUE_SPINE.name | arista.avd.default("EBGP-BLUE-SPINE") }}:
       type: ipv4
-      password: "{{ bgp_peer_groups.EBGP_RED_SPINE.password }}"
+      password: "{{ bgp_peer_groups.EBGP_BLUE_SPINE.password }}"
       maximum_routes: 12000
       remote_as: {{ underlay_data.links['Ethernet49'].peer_bgp_as }}
       send_community: all
@@ -13,7 +13,7 @@ router_bgp:
       route_map: RM-SET-COMMUNITY-ROUTES
   address_family_ipv4_multicast:
     peer_groups:
-      {{ bgp_peer_groups.EBGP_RED_SPINE.name | arista.avd.default("EBGP-RED-SPINE") }}:
+      {{ bgp_peer_groups.EBGP_BLUE_SPINE.name | arista.avd.default("EBGP-BLUE-SPINE") }}:
         activate: true
     redistribute_routes:
       connected:
@@ -24,7 +24,7 @@ router_bgp:
 {%     for link_interface in underlay_data.links | arista.avd.natural_sort if underlay_data.links[link_interface].type is arista.avd.defined('underlay_p2p') %}
 {%         set link = underlay_data.links[link_interface] %}
     {{ link.peer_ip_address }}:
-      peer_group: {{ bgp_peer_groups.EBGP_RED_SPINE.name | arista.avd.default("EBGP-RED-SPINE") }}
+      peer_group: {{ bgp_peer_groups.EBGP_BLUE_SPINE.name | arista.avd.default("EBGP-BLUE-SPINE") }}
       remote_as: {{ link.peer_bgp_as }}
       description: {{ link.peer }}_{{ link.peer_interface }}
 {%         if link.bfd is arista.avd.defined %}
@@ -34,8 +34,6 @@ router_bgp:
 router_pim_sparse_mode:
   ipv4:
     rp_addresses:
-      {{ rp_blocks.RP_RED.rp_ip }}:
+      {{ rp_blocks.RP_BLUE.rp_ip }}:
         groups:
-          {{ rp_blocks.RP_RED.rp_groups }}
-my_uplinks:
-  {{ switch.p2p_ip_addresses }}
+          {{ rp_blocks.RP_BLUE.rp_groups }}
