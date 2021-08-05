@@ -80,9 +80,6 @@ switch:
 {# switch.uplink_switch_interfaces #}
   uplink_switch_interfaces: {{ switch_data.combined.uplink_switch_interfaces | arista.avd.default() }}
 
-{# switch.p2p_ip_addresses #}
-  p2p_ip_addresses: {{ switch_data.combined.p2p_ip_addresses | arista.avd.default() }}
-
 {# switch.uplink_interfaces #}
   uplink_interfaces: {{ switch_data.combined.uplink_interfaces | arista.avd.default() }}
 
@@ -356,3 +353,12 @@ switch:
 
 {# switch.vlans #}
   vlans: {{ leaf.vlans | unique }}
+
+{########################}
+{# RT-MEDIA related facts #}
+
+{# switch.p2p_ip_addresses #}
+  p2p_ip_addresses: {{ switch_data.combined.p2p_ip_addresses | arista.avd.default() }}
+
+{# switch.ptp_priority1 #}
+  ptp_priority1: {{ switch_data.combined.ptp_priority1 | arista.avd.default() }}
