@@ -6,6 +6,12 @@ router_bgp:
       type: ipv4
       password: "{{ bgp_peer_groups.EBGP_BLUE_SPINE.password }}"
       maximum_routes: 12000
+      remote_as: {{ underlay_data.links['Ethernet50'].peer_bgp_as }}
+      send_community: all
+    {{ bgp_peer_groups.EBGP_RED_SPINE.name | arista.avd.default("EBGP-RED-SPINE") }}:
+      type: ipv4
+      password: "{{ bgp_peer_groups.EBGP_RED_SPINE.password }}"
+      maximum_routes: 12000
       remote_as: {{ underlay_data.links['Ethernet49'].peer_bgp_as }}
       send_community: all
   redistribute_routes:
@@ -14,6 +20,8 @@ router_bgp:
   address_family_ipv4_multicast:
     peer_groups:
       {{ bgp_peer_groups.EBGP_BLUE_SPINE.name | arista.avd.default("EBGP-BLUE-SPINE") }}:
+        activate: true
+      {{ bgp_peer_groups.EBGP_RED_SPINE.name | arista.avd.default("EBGP-RED-SPINE") }}:
         activate: true
     redistribute_routes:
       connected:
@@ -24,16 +32,31 @@ router_bgp:
 {%     for link_interface in underlay_data.links | arista.avd.natural_sort if underlay_data.links[link_interface].type is arista.avd.defined('underlay_p2p') %}
 {%         set link = underlay_data.links[link_interface] %}
     {{ link.peer_ip_address }}:
+{%         if link.peer_type == 'spine_red'  %}
+      peer_group: {{ bgp_peer_groups.EBGP_RED_SPINE.name | arista.avd.default("EBGP-RED-SPINE") }}
+{%         else %}
       peer_group: {{ bgp_peer_groups.EBGP_BLUE_SPINE.name | arista.avd.default("EBGP-BLUE-SPINE") }}
-      remote_as: {{ link.peer_bgp_as }}
+{%         endif %}
       description: {{ link.peer }}_{{ link.peer_interface }}
 {%         if link.bfd is arista.avd.defined %}
       bfd: {{ link.bfd }}
 {%         endif %}
 {%     endfor %}
+{# Multicst Rendevous Points #}
 router_pim_sparse_mode:
   ipv4:
     rp_addresses:
+      {{ rp_blocks.RP_RED.rp_ip }}:
+        groups:
+          {{ rp_blocks.RP_RED.rp_groups }}
       {{ rp_blocks.RP_BLUE.rp_ip }}:
         groups:
           {{ rp_blocks.RP_BLUE.rp_groups }}
+{# PTP settings #}
+ptp:
+  source:
+    ip: "{{loopback_address}}"
+  priority1: "{{ switch.ptp_priority1 }}"
+  priority2: "{{ ansible_host.split('.')[3] }}"
+  domain: 127
+  mode: boundary

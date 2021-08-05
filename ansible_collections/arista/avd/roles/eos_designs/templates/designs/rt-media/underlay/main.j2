@@ -13,14 +13,16 @@
 {%     if switch.underlay_routing_protocol == "ebgp" %}
 
 {%         if type == "leaf_red" %}
-{%             include 'designs/rt-media/underlay/ebgp/router-bgp-leaf-red.j2'%}
+{%             include 'designs/rt-media/underlay/ebgp/media-fabric-leaf-red.j2'%}
 {%         elif type == "leaf_blue" %}
-{%             include 'designs/rt-media/underlay/ebgp/router-bgp-leaf-blue.j2'%}
+{%             include 'designs/rt-media/underlay/ebgp/media-fabric-leaf-blue.j2'%}
+{%         elif type == "leaf_purple" %}
+{%             include 'designs/rt-media/underlay/ebgp/media-fabric-leaf-purple.j2'%}
 {%         else %}
 {%             include 'designs/rt-media/underlay/ebgp/router-bgp.j2'%}
 {%         endif %}
 
-{%             include 'designs/rt-media/underlay/ebgp/prefix-lists.j2' %}
+{%             include 'designs/rt-media/underlay/ebgp/rt-prefix-lists.j2' %}
 
 {%             include 'designs/rt-media/underlay/ebgp/route-maps.j2' %}
 

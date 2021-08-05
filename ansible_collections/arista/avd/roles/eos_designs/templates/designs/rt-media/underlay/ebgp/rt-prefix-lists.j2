@@ -1,0 +1,11 @@
+{# prefix-lists #}
+prefix_lists:
+{# Fabric wide Prefix Lists #}
+{%     for prefix_list in site_prefix_lists  %}
+  {{ prefix_list }}:
+    sequence_numbers:
+{%         for seq in site_prefix_lists[prefix_list]  %}
+      {{ loop.index * 10 }}:
+        action: "{{ seq }}"
+{%         endfor %}
+{%     endfor %}
