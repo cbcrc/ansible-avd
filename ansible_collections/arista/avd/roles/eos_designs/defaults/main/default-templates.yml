@@ -34,12 +34,12 @@ default_templates:
           list_merge: "{{ custom_structured_configuration_list_merge }}"
           strip_empty_keys: false
     ip_addressing:
-      router_id: 'designs/l3ls-evpn/ip-addressing/router-id.j2'
+      router_id: 'designs/l3ls-evpn/ip-addressing/router-id-lastoctet.j2'
       mlag_ip_primary: 'designs/l3ls-evpn/ip-addressing/mlag-ip-primary-fixed.j2'
       mlag_ip_secondary: 'designs/l3ls-evpn/ip-addressing/mlag-ip-secondary-fixed.j2'
       mlag_l3_ip_primary: 'designs/l3ls-evpn/ip-addressing/mlag-l3-ip-primary-fixed.j2'
       mlag_l3_ip_secondary: 'designs/l3ls-evpn/ip-addressing/mlag-l3-ip-secondary-fixed.j2'
       p2p_uplinks_ip: 'designs/l3ls-evpn/ip-addressing/p2p-uplinks-ip.j2'
       p2p_uplinks_peer_ip: 'designs/l3ls-evpn/ip-addressing/p2p-uplinks-peer-ip.j2'
-      vtep_ip_mlag: 'designs/l3ls-evpn/ip-addressing/vtep-ip-mlag.j2'
-      vtep_ip: 'designs/l3ls-evpn/ip-addressing/vtep-ip.j2'
+      vtep_ip_mlag: 'designs/l3ls-evpn/ip-addressing/vtep-ip-mlag-lastoctet.j2'
+      vtep_ip: 'designs/l3ls-evpn/ip-addressing/vtep-ip-lastoctet.j2'
