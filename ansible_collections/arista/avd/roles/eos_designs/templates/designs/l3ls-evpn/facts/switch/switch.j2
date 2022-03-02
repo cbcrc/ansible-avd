@@ -9,6 +9,12 @@ switch:
   id: {{ switch_id }}
 {% endif %}
 
+{# switch.avd_id #}
+{% if switch_data.node.avd_id is arista.avd.defined(var_name='avd_id') and switch_data.node.avd_id | int != 0 %}
+{%     set switch_avd_id = switch_data.node.avd_id %}
+  avd_id: {{ switch_avd_id }}
+{% endif %}
+
 {# switch.mgmt_ip #}
   mgmt_ip: {{ switch_data.node.mgmt_ip | arista.avd.default() }}
 
