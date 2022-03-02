@@ -1,0 +1,5 @@
+{% if switch.avd_id is defined and switch.avd_id | int != 0 %}
+{{ switch.uplink_ipv4_pool | ansible.netcommon.ipaddr('network') | ansible.netcommon.ipmath(((switch.avd_id -1) * 2 * switch.max_uplink_switches * switch.max_parallel_uplinks) + (uplink_switch_index) * 2 ) }}
+{% else%}
+{{ switch.uplink_ipv4_pool | ansible.netcommon.ipaddr('network') | ansible.netcommon.ipmath(((switch.id -1) * 2 * switch.max_uplink_switches * switch.max_parallel_uplinks) + (uplink_switch_index) * 2) }}
+{% endif %}
