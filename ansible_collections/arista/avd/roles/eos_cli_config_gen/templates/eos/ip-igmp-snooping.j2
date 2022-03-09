@@ -2,7 +2,7 @@
 {% if ip_igmp_snooping.globally_enabled is arista.avd.defined(false) %}
 !
 no ip igmp snooping
-{% elif ip_igmp_snooping.querier_enabled is arista.avd.defined(true) %}
+{% elif ip_igmp_snooping.querier.enabled is arista.avd.defined(true) %}
 !
 ip igmp snooping querier
 {% elif ip_igmp_snooping.vlans is arista.avd.defined %}
