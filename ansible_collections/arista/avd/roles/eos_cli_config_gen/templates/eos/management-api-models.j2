@@ -1,0 +1,19 @@
+{# Management API MODELS #}
+{% if management_api_models is arista.avd.defined %}
+!
+management api models
+{%     for provider in management_api_models.providers | arista.avd.natural_sort %}
+  provider {{ provider }}
+{%         if provider == 'aft' %}
+{%             if management_api_models.providers["aft"].ipv4_unicast is arista.avd.defined(true) %}
+    ipv4-unicast
+{%             elif management_api_models.providers["aft"].ipv6_unicast is arista.avd.defined(true) %}
+    ipv6-unicast
+{%             endif %}
+{%         else %}
+{%             for path in management_api_models.providers[provider].paths | arista.avd.natural_sort %}
+    path {{ path }}
+{%             endfor %}
+{%         endif %}
+{%     endfor %}
+{% endif %}
