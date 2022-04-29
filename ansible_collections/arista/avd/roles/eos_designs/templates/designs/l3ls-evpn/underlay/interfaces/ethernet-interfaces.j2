@@ -43,7 +43,7 @@ ethernet_interfaces:
     peer: {{ link.peer }}
     peer_interface: {{ link.peer_interface }}
     peer_type: {{ link.peer_type }}
-    description: LAG_LINK TO_{{ link.channel_description | upper }}_{{ link.peer_interface }}
+    description: LAG_LINK TO_{{ link.peer | upper }}_{{ link.peer_interface }}
 {%         if link.speed is arista.avd.defined %}
     speed: {{ link.speed }}
 {%         endif %}
