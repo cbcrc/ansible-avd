@@ -1,13 +1,16 @@
 {# MCS Client #}
-{% if mcs_client is arista.avd.defined %}
+{% if mcs_client is arista.avd.defined and mcs_client.shutdown == false %}
 !
 mcs client
+   no shutdown
+{%   if mcs_client.cvx_secondary is arista.avd.defined and mcs_client.cvx_secondary.shutdown == false %}
 {%     if mcs_client.cvx_secondary.name is arista.avd.defined %}
    cvx secondary {{ mcs_client.cvx_secondary.name }}
+      no shutdown
 {%     else %}
    cvx secondary default
-{%     endif %}
       no shutdown
+{%     endif %}
 {%     if mcs_client.cvx_secondary.server_hosts is arista.avd.defined %}
 {%         for server_host in mcs_client.cvx_secondary.server_hosts |arista.avd.natural_sort() %}
       server host {{ server_host }}
@@ -25,4 +28,5 @@ mcs client
 {%     if mcs_client.cvx_secondary.vrf is arista.avd.defined %}
       vrf  {{ mcs_client.cvx_secondary.vrf }}
 {%     endif %}
+{%   endif %}
 {% endif %}
