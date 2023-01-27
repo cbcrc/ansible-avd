@@ -16,7 +16,13 @@ router bgp {{ router_bgp.as }}
 {%     endif %}
 {%     for peer_group in router_bgp.peer_groups | arista.avd.natural_sort %}
 {%         if router_bgp.peer_groups[peer_group].bgp_listen_range_prefix is arista.avd.defined and router_bgp.peer_groups[peer_group].peer_filter is arista.avd.defined %}
+{%             if router_bgp.peer_groups[peer_group].bgp_listen_range_prefix is string %}
    bgp listen range {{ router_bgp.peer_groups[peer_group].bgp_listen_range_prefix }} peer-group {{ peer_group }} peer-filter {{ router_bgp.peer_groups[peer_group].peer_filter }}
+{%             else %}
+{%                 for bgp_listen_range in router_bgp.peer_groups[peer_group].bgp_listen_range_prefix | arista.avd.natural_sort %}
+   bgp listen range {{ bgp_listen_range }} peer-group {{ peer_group }} peer-filter {{ router_bgp.peer_groups[peer_group].peer_filter }}
+{%                 endfor %}
+{%             endif %}
 {%         endif %}
 {%     endfor %}
 {%     for peer_group in router_bgp.peer_groups | arista.avd.natural_sort %}
