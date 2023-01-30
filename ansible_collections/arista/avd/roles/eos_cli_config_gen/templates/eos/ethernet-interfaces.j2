@@ -99,9 +99,6 @@ interface {{ ethernet_interface }}
    {{ vlan_translation_cli }}
 {%             endif %}
 {%         endfor %}
-{%         if ethernet_interfaces[ethernet_interface].ip_helper_address is arista.avd.defined %}
-   ip helper-address {{ ethernet_interfaces[ethernet_interface].ip_helper_address }}
-{%         endif %}
 {%         if ethernet_interfaces[ethernet_interface].l2_protocol.encapsulation_dot1q_vlan is arista.avd.defined %}
    l2-protocol encapsulation dot1q vlan {{ ethernet_interfaces[ethernet_interface].l2_protocol.encapsulation_dot1q_vlan }}
 {%         endif %}
@@ -138,6 +135,9 @@ interface {{ ethernet_interface }}
    ip address {{ ip_address_secondary }} secondary
 {%                 endfor %}
 {%             endif %}
+{%         endif %}
+{%         if ethernet_interfaces[ethernet_interface].ip_helper_address is arista.avd.defined %}
+   ip helper-address {{ ethernet_interfaces[ethernet_interface].ip_helper_address }}
 {%         endif %}
 {%         if ethernet_interfaces[ethernet_interface].ipv6_enable is arista.avd.defined(true) %}
    ipv6 enable
