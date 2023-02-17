@@ -9,6 +9,7 @@ router multicast
 {%         endif %}
 {%         if router_multicast.ipv4.max_fastdrops is arista.avd.defined %}
       max-fastdrops {{ router_multicast.ipv4.max_fastdrops }}
+{%         endif %}
 {%         if router_multicast.ipv4.multipath is arista.avd.defined %}
       multipath {{ router_multicast.ipv4.multipath }}
 {%         endif %}
