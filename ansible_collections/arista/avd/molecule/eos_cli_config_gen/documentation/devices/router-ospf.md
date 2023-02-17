@@ -1,6 +1,5 @@
 # router-ospf
 # Table of Contents
-<!-- toc -->
 
 - [Management](#management)
   - [Management Interfaces](#management-interfaces)
@@ -22,7 +21,6 @@
 - [ACL](#acl)
 - [Quality Of Service](#quality-of-service)
 
-<!-- toc -->
 # Management
 
 ## Management Interfaces
@@ -202,10 +200,15 @@ interface Vlan24
 
 ### Router OSPF Router Redistribution
 
-| Process ID | Redistribute Connected | Redistribute Connected Route-map | Redistribute Static | Redistribute Static Route-map |
-| ---------- | ---------------------- | -------------------------------- | ------------------- | ----------------------------- |
-| 100 | enabled| - | enabled | - |
-| 200 | enabled| rm-ospf-connected | enabled | rm-ospf-static |
+| Process ID | Source Protocol | Route Map |
+| ---------- | --------------- | --------- |
+| 100 | connected | - |
+| 100 | static | - |
+| 100 | bgp | - |
+| 200 | connected | rm-ospf-connected |
+| 200 | static | rm-ospf-static |
+| 200 | bgp | rm-ospf-bgp |
+
 
 ### Router OSPF Router Max-Metric
 
@@ -271,6 +274,7 @@ router ospf 100
    default-information originate
    redistribute static
    redistribute connected
+   redistribute bgp
    auto-cost reference-bandwidth 100
    maximum-paths 10
    mpls ldp sync default
@@ -299,6 +303,7 @@ router ospf 200 vrf ospf_zone
    default-information originate always
    redistribute static route-map rm-ospf-static
    redistribute connected route-map rm-ospf-connected
+   redistribute bgp route-map rm-ospf-bgp
 !
 router ospf 300
    max-metric router-lsa

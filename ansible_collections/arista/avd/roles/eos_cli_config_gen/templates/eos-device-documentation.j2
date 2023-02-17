@@ -1,5 +1,6 @@
 # {{ inventory_hostname }}
 # Table of Contents
+
 <!-- toc -->
 <!-- toc -->
 # Management
@@ -13,6 +14,8 @@
 {% include 'documentation/name-servers.j2' %}
 {## Domain Lookup #}
 {% include 'documentation/domain-lookup.j2' %}
+{## Clock #}
+{% include 'documentation/clock.j2' %}
 {## NTP #}
 {% include 'documentation/ntp.j2' %}
 {## PTP #}
@@ -21,14 +24,16 @@
 {% include 'documentation/system-control-plane.j2' %}
 {## Management SSH #}
 {% include 'documentation/management-ssh.j2' %}
+{## IP SSH Client Source Interfaces #}
+{% include 'documentation/ip-ssh-client-source-interfaces.j2' %}
 {## Management API GNMI #}
 {% include 'documentation/management-api-gnmi.j2' %}
+{# management Console #}
+{% include 'documentation/management-console.j2' %}
 {## Management API HTTP #}
 {% include 'documentation/management-api-http.j2' %}
-{## Management CVX #}
-{% include 'documentation/management-cvx.j2' %}
-{## Management API MODELS #}
-{% include 'documentation/management-api-models.j2' %}
+{## IP HTTP Client Source Interfaces #}
+{% include 'documentation/ip-http-client-source-interfaces.j2' %}
 
 # Authentication
 {## Local Users #}
@@ -43,6 +48,8 @@
 {% include 'documentation/ip-tacacs-source-interfaces.j2' %}
 {## RADIUS Servers #}
 {% include 'documentation/radius-servers.j2' %}
+{## IP RADIUS Source Interfaces #}
+{% include 'documentation/ip-radius-source-interfaces.j2' %}
 {## AAA Server Groups #}
 {% include 'documentation/aaa-server-groups.j2' %}
 {## AAA Authentication #}
@@ -75,10 +82,18 @@
 {% include 'documentation/vmtracer-sessions.j2' %}
 {## Event Handler #}
 {% include 'documentation/event-handler.j2' %}
+{# Monitor Connectivity #}
+{% include 'documentation/monitor-connectivity.j2' %}
 {# Hardware TCAM Profile #}
 {% include 'documentation/tcam-profile.j2' %}
+{# Link Tracking Groups #}
+{% include 'documentation/link-tracking-groups.j2' %}
 {# MLAG #}
 {% include 'documentation/mlag-configuration.j2' %}
+{# LLDP #}
+{% include 'documentation/lldp.j2' %}
+{# LACP #}
+{% include 'documentation/lacp-configuration.j2' %}
 {# Spanning Tree #}
 {% include 'documentation/spanning-tree.j2' %}
 {# Internal VLAN Allocation Policy #}
@@ -133,6 +148,8 @@
 {% include 'documentation/bfd.j2' %}
 {# MPLS #}
 {% include 'documentation/mpls.j2' %}
+{# Patch Panel #}
+{% include 'documentation/patch-panel.j2' %}
 
 # Multicast
 {## IP IGMP Snooping #}
@@ -197,6 +214,8 @@
 {% include 'documentation/policy-maps-qos.j2' %}
 {## QOS Profiles #}
 {% include 'documentation/qos-profiles.j2' %}
+{## QOS Interfaces #}
+{% include 'documentation/qos-interfaces.j2' %}
 {# Maintenance Mode #}
 {% include 'documentation/maintenance-mode.j2' %}
 {# EOS CLI #}
