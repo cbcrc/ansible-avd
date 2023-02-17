@@ -1,10 +1,5 @@
 {# EBGP #}
 {## Underlay network peerings #}
-router_bgp:
-  redistribute_routes:
-    connected:
-      route_map: RM-CONN-2-BGP
-
 {% if underlay_rfc5549 is arista.avd.defined(true) %}
 {# RFC5549 EBGP peerings #}
   neighbor_interfaces:
