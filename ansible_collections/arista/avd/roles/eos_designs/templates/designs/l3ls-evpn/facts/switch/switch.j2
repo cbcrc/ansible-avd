@@ -83,6 +83,9 @@ switch:
 {# switch.uplink_interfaces #}
   uplink_interfaces: {{ switch_data.combined.uplink_interfaces | arista.avd.default() }}
 
+{# switch.uplink_p2p_ips #}
+  uplink_p2p_ips: {{ switch_data.combined.p2p_ips | arista.avd.default() }}
+
 {# switch.uplink_interface_speed #}
   uplink_interface_speed: {{ switch_data.combined.uplink_interface_speed | arista.avd.default() }}
 

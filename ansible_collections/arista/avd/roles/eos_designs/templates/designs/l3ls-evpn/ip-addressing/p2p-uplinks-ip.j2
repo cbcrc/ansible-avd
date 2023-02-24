@@ -1,1 +1,5 @@
+{%   if defined_p2p_ipaddress is arista.avd.defined and switch.uplink_p2p_ips is arista.avd.defined  %}
+  {{ switch.uplink_p2p_ips[uplink_switch_index] | ansible.netcommon.ipaddr('network') | ansible.netcommon.ipmath(1) }}
+{%   else %}
 {{ switch.uplink_ipv4_pool | ansible.netcommon.ipaddr('network') | ansible.netcommon.ipmath(((switch.id -1) * 2 * switch.max_uplink_switches * switch.max_parallel_uplinks) + (uplink_switch_index) * 2 + 1) }}
+{%   endif %}
