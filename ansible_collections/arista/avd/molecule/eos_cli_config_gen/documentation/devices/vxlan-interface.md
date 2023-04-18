@@ -33,7 +33,7 @@
 
 | Management Interface | description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | -  | - |
+| Management1 | oob_management | oob | MGMT | - | - |
 
 ### Management Interfaces Device Configuration
 
@@ -65,13 +65,19 @@ interface Management1
 
 ### VXLAN Interface Summary
 
-#### Source Interface: Loopback0
-
-#### MLAG Source Interface: Loopback1
-
-#### UDP port: 4789
-
-#### EVPN MLAG Shared Router MAC : mlag-system-id
+| Setting | Value |
+| ------- | ----- |
+| Source Interface | Loopback0 |
+| MLAG Source Interface | Loopback1 |
+| UDP port | 4789 |
+| EVPN MLAG Shared Router MAC | mlag-system-id |
+| VXLAN flood-lists learning from data-plane | Enabled |
+| Qos dscp propagation encapsulation | Enabled |
+| Qos map dscp to traffic-class decapsulation | Enabled |
+| Remote VTEPs EVPN BFD transmission rate | 300ms |
+| Remote VTEPs EVPN BFD expected minimum incoming rate (min-rx) | 300ms |
+| Remote VTEPs EVPN BFD multiplier | 3 |
+| Remote VTEPs EVPN BFD prefix-list | PL-TEST |
 
 #### VLAN to VNI, Flood List and Multicast Group Mappings
 
@@ -79,6 +85,7 @@ interface Management1
 | ---- | --- | ---------- | --------------- |
 | 110 | 10110 | - | 239.9.1.4 |
 | 111 | 10111 | 10.1.1.10<br/>10.1.1.11 | - |
+| 112 | - | - | 239.9.1.6 |
 
 #### VRF to VNI and Multicast Group Mappings
 
@@ -90,10 +97,8 @@ interface Management1
 #### Default Flood List
 
 | Default Flood List |
-| ---------- |
+| ------------------ |
 | 10.1.0.10<br/>10.1.0.11 |
-
-#### VXLAN flood-lists learning from data-plane: Enabled
 
 ### VXLAN Interface Device Configuration
 
@@ -111,8 +116,13 @@ interface Vxlan1
    vxlan vrf Tenant_A_OP_Zone vni 10
    vxlan vrf Tenant_A_WEB_Zone vni 11
    vxlan mlag source-interface Loopback1
+   bfd vtep evpn interval 300 min-rx 300 multiplier 3
+   bfd vtep evpn prefix-list PL-TEST
    vxlan flood vtep 10.1.0.10 10.1.0.11
+   vxlan qos dscp propagation encapsulation
+   vxlan qos map dscp to traffic-class decapsulation
    vxlan vlan 110 multicast group 239.9.1.4
+   vxlan vlan 112 multicast group 239.9.1.6
    vxlan vrf Tenant_A_OP_Zone multicast group 232.0.0.10
    vxlan encapsulation ipv4
 
@@ -126,7 +136,8 @@ interface Vxlan1
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false|
+| default | False |
+
 ### IP Routing Device Configuration
 
 ```eos
@@ -137,7 +148,7 @@ interface Vxlan1
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false |
+| default | False |
 
 # Multicast
 

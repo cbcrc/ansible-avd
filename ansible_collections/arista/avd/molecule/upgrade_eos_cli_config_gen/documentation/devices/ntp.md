@@ -33,7 +33,7 @@
 
 | Management Interface | description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | -  | - |
+| Management1 | oob_management | oob | MGMT | - | - |
 
 ### Management Interfaces Device Configuration
 
@@ -70,13 +70,17 @@ interface Management1
 
 #### NTP Authentication Keys
 
-| ID | Algoritm |
+| ID | Algorithm |
 | -- | -------- |
+| 1 | md5 |
+| 2 | sha1 |
 
 ### NTP Device Configuration
 
 ```eos
 !
+ntp authentication-key 1 md5 044F0E151B
+ntp authentication-key 2 sha1 15060E1F10
 ntp trusted-key 1-2
 ntp authenticate
 ntp local-interface lo1
@@ -108,7 +112,8 @@ ntp server 10.1.1.2
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false|
+| default | False |
+
 ### IP Routing Device Configuration
 
 ```eos
@@ -119,7 +124,7 @@ ntp server 10.1.1.2
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false |
+| default | False |
 
 # Multicast
 

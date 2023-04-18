@@ -36,7 +36,7 @@
 
 | Management Interface | description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | -  | - |
+| Management1 | oob_management | oob | MGMT | - | - |
 
 ### Management Interfaces Device Configuration
 
@@ -72,7 +72,8 @@ interface Management1
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false|
+| default | False |
+
 ### IP Routing Device Configuration
 
 ```eos
@@ -83,7 +84,7 @@ interface Management1
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false |
+| default | False |
 
 ## Static Routes
 
@@ -91,9 +92,9 @@ interface Management1
 
 | VRF | Destination Prefix | Next Hop IP             | Exit interface      | Administrative Distance       | Tag               | Route Name                    | Metric         |
 | --- | ------------------ | ----------------------- | ------------------- | ----------------------------- | ----------------- | ----------------------------- | -------------- |
-| BLUE-C1  | 193.1.0.0/24 |  -  |  Null0  |  1  |  -  |  -  |  - |
-| BLUE-C1  | 193.1.1.0/24 |  -  |  Null0  |  1  |  -  |  -  |  - |
-| BLUE-C1  | 193.1.2.0/24 |  -  |  Null0  |  1  |  -  |  -  |  - |
+| BLUE-C1 | 193.1.0.0/24 | - | Null0 | 1 | - | - | - |
+| BLUE-C1 | 193.1.1.0/24 | - | Null0 | 1 | - | - | - |
+| BLUE-C1 | 193.1.2.0/24 | - | Null0 | 1 | - | - | - |
 
 ### Static Routes Device Configuration
 
@@ -119,6 +120,14 @@ ip route vrf BLUE-C1 193.1.2.0/24 Null0
 | graceful-restart restart-time 300 |
 | graceful-restart |
 
+### Router BGP Listen Ranges
+
+| Prefix | Peer-ID Include Router ID | Peer Group | Peer-Filter | Remote-AS | VRF |
+| ------ | ------------------------- | ---------- | ----------- | --------- | --- |
+| 10.10.10.0/24 | - | my-peer-group1 | my-peer-filter | - | YELLOW-C1 |
+| 12.10.10.0/24 | True | my-peer-group3 | - | 65444 | YELLOW-C1 |
+| 13.10.10.0/24 | - | my-peer-group4 | my-peer-filter | - | YELLOW-C1 |
+
 ### Router BGP Peer Groups
 
 #### OBS_WAN
@@ -137,6 +146,13 @@ ip route vrf BLUE-C1 193.1.2.0/24 Null0
 | Source | Loopback101 |
 | Ebgp multihop | 10 |
 
+#### SEDI-shut
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | ipv4 |
+| Shutdown | True |
+
 #### WELCOME_ROUTERS
 
 | Settings | Value |
@@ -146,12 +162,15 @@ ip route vrf BLUE-C1 193.1.2.0/24 Null0
 
 ### BGP Neighbors
 
-| Neighbor | Remote AS | VRF | Send-community | Maximum-routes |
-| -------- | --------- | --- | -------------- | -------------- |
-| 10.1.1.0 | Inherited from peer group OBS_WAN | BLUE-C1 | - | - |
-| 10.255.1.1 | Inherited from peer group WELCOME_ROUTERS | BLUE-C1 | - | - |
-| 101.0.3.1 | Inherited from peer group SEDI | BLUE-C1 | - | - |
-| 10.1.1.0 | Inherited from peer group OBS_WAN | RED-C1 | - | - |
+| Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD | RIB Pre-Policy Retain | Route-Reflector Client |
+| -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- |
+| 10.1.1.0 | Inherited from peer group OBS_WAN | BLUE-C1 | - | - | - | - | - | - | - |
+| 10.255.1.1 | Inherited from peer group WELCOME_ROUTERS | BLUE-C1 | - | - | - | - | - | - | - |
+| 101.0.3.1 | Inherited from peer group SEDI | BLUE-C1 | - | - | - | - | - | - | - |
+| 101.0.3.2 | Inherited from peer group SEDI | BLUE-C1 | True | - | - | Allowed, allowed 3 (default) times | - | - | - |
+| 101.0.3.3 | - | BLUE-C1 | Inherited from peer group SEDI-shut | - | - | Allowed, allowed 5 times | - | - | - |
+| 10.1.1.0 | Inherited from peer group OBS_WAN | RED-C1 | - | - | - | - | - | - | - |
+| 10.1.1.0 | Inherited from peer group OBS_WAN | YELLOW-C1 | - | - | - | - | - | - | - |
 
 ### Router BGP VRFs
 
@@ -159,6 +178,7 @@ ip route vrf BLUE-C1 193.1.2.0/24 Null0
 | --- | ------------------- | ------------ |
 | BLUE-C1 | 1.0.1.1:101 | static |
 | RED-C1 | 1.0.1.1:102 | - |
+| YELLOW-C1 | 1.0.1.1:103 | - |
 
 ### Router BGP Device Configuration
 
@@ -170,23 +190,28 @@ router bgp 65001
    distance bgp 20 200 200
    graceful-restart restart-time 300
    graceful-restart
-   neighbor OBS_WAN description BGP Connection to OBS WAN CPE
    neighbor OBS_WAN peer group
    neighbor OBS_WAN remote-as 65000
-   neighbor SEDI description BGP Connection to OBS WAN CPE
+   neighbor OBS_WAN description BGP Connection to OBS WAN CPE
    neighbor SEDI peer group
    neighbor SEDI remote-as 65003
    neighbor SEDI update-source Loopback101
+   neighbor SEDI description BGP Connection to OBS WAN CPE
    neighbor SEDI ebgp-multihop 10
-   neighbor WELCOME_ROUTERS description BGP Connection to WELCOME ROUTER 02
+   neighbor SEDI-shut shutdown
+   neighbor SEDI-shut peer group
+   neighbor SEDI-shut description BGP Peer Shutdown
    neighbor WELCOME_ROUTERS peer group
    neighbor WELCOME_ROUTERS remote-as 65001
+   neighbor WELCOME_ROUTERS description BGP Connection to WELCOME ROUTER 02
    redistribute static
    !
    address-family ipv4
       neighbor OBS_WAN activate
       neighbor SEDI route-map RM-BGP-EXPORT-DEFAULT-BLUE-C1 out
       neighbor SEDI activate
+      neighbor SEDI-shut route-map RM-BGP-EXPORT-DEFAULT-BLUE-C1 out
+      neighbor SEDI-shut activate
       neighbor WELCOME_ROUTERS activate
    !
    vrf BLUE-C1
@@ -196,9 +221,14 @@ router bgp 65001
       neighbor 10.255.1.1 weight 65535
       neighbor 101.0.3.1 peer group SEDI
       neighbor 101.0.3.1 weight 100
-      redistribute static
+      neighbor 101.0.3.2 peer group SEDI
+      neighbor 101.0.3.2 allowas-in
+      neighbor 101.0.3.2 shutdown
+      neighbor 101.0.3.3 peer group SEDI-shut
+      neighbor 101.0.3.3 allowas-in 5
       aggregate-address 0.0.0.0/0 as-set summary-only attribute-map RM-BGP-AGG-APPLY-SET
       aggregate-address 193.1.0.0/16 as-set summary-only attribute-map RM-BGP-AGG-APPLY-SET
+      redistribute static
       !
       comment
       Comment created from eos_cli under router_bgp.vrfs.BLUE-C1
@@ -210,6 +240,13 @@ router bgp 65001
       neighbor 10.1.1.0 peer group OBS_WAN
       neighbor 10.1.1.0 prefix-list PL-BGP-DEFAULT-RED-IN-C1 in
       neighbor 10.1.1.0 prefix-list PL-BGP-DEFAULT-RED-OUT-C1 out
+   !
+   vrf YELLOW-C1
+      rd 1.0.1.1:103
+      bgp listen range 10.10.10.0/24 peer-group my-peer-group1 peer-filter my-peer-filter
+      bgp listen range 12.10.10.0/24 peer-id include router-id peer-group my-peer-group3 remote-as 65444
+      bgp listen range 13.10.10.0/24 peer-group my-peer-group4 peer-filter my-peer-filter
+      neighbor 10.1.1.0 peer group OBS_WAN
 ```
 
 # Multicast
@@ -258,15 +295,15 @@ ip prefix-list PL-BGP-DEFAULT-RED-OUT-C1
 
 #### RM-BGP-AGG-APPLY-SET
 
-| Sequence | Type | Match and/or Set |
-| -------- | ---- | ---------------- |
-| 10 | permit | set local-preference 50 |
+| Sequence | Type | Match | Set | Sub-Route-Map | Continue |
+| -------- | ---- | ----- | --- | ------------- | -------- |
+| 10 | permit | - | local-preference 50 | - | - |
 
 #### RM-BGP-EXPORT-DEFAULT-BLUE-C1
 
-| Sequence | Type | Match and/or Set |
-| -------- | ---- | ---------------- |
-| 10 | permit | match ip address prefix-list PL-BGP-DEFAULT-BLUE-C1 |
+| Sequence | Type | Match | Set | Sub-Route-Map | Continue |
+| -------- | ---- | ----- | --- | ------------- | -------- |
+| 10 | permit | ip address prefix-list PL-BGP-DEFAULT-BLUE-C1 | - | - | - |
 
 ### Route-maps Device Configuration
 

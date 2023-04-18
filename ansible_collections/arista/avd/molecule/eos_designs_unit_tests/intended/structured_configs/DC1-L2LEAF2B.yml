@@ -27,7 +27,7 @@ name_server:
   - 8.8.8.8
 snmp_server:
   contact: example@example.com
-  location: DC1_FABRIC rackE DC1-L2LEAF2B
+  location: EOS_DESIGNS_UNIT_TESTS rackE DC1-L2LEAF2B
 spanning_tree:
   mode: mstp
   mst_instances:
@@ -36,13 +36,13 @@ spanning_tree:
   no_spanning_tree_vlan: 4091
 local_users:
   admin:
-    privilege: 15
-    role: network-admin
-    no_password: true
+    disabled: true
   cvpadmin:
     privilege: 15
     role: network-admin
     sha512_password: $6$rZKcbIZ7iWGAWTUM$TCgDn1KcavS0s.OV8lacMTUkxTByfzcGlFlYUWroxYuU7M/9bIodhRO7nXGzMweUxvbk8mJmQl8Bh44cRktUj.
+    ssh_key: ssh-rsa AAAAB3NzaC1yc2EAA82spi2mkxp4FgaLi4CjWkpnL1A/MD7WhrSNgqXToF7QCb9Lidagy9IHafQxfu7LwkFdyQIMu8XNwDZIycuf29wHbDdz1N+YNVK8zwyNAbMOeKMqblsEm2YIorgjzQX1m9+/rJeFBKz77PSgeMp/Rc3txFVuSmFmeTy3aMkU=
+      cvpadmin@hostmachine.local
 vrfs:
   MGMT:
     ip_routing: false
@@ -58,6 +58,7 @@ management_api_http:
   enable_vrfs:
     MGMT: {}
   enable_https: true
+  default_services: false
 vlans:
   4091:
     tenant: system
@@ -82,6 +83,9 @@ vlans:
   111:
     tenant: Tenant_A
     name: Tenant_A_OP_Zone_2
+  112:
+    tenant: Tenant_A
+    name: Tenant_A_OP_Zone_3
   150:
     tenant: Tenant_A
     name: Tenant_A_WAN_Zone_1
@@ -135,8 +139,8 @@ port_channel_interfaces:
     description: DC1_SVC3_Po7
     type: switched
     shutdown: false
-    vlans: 110-111,120-121,130-131,140-141,150,160-161,210-211,250,310-311,350
     mode: trunk
+    vlans: 110-112,120-121,130-131,140-141,150,160-161,210-211,250,310-311,350
     mlag: 1
 ethernet_interfaces:
   Ethernet3:
@@ -164,8 +168,8 @@ ethernet_interfaces:
     peer_interface: Ethernet8
     peer_type: l3leaf
     description: DC1-SVC3A_Ethernet8
-    type: switched
     shutdown: false
+    type: switched
     channel_group:
       id: 1
       mode: active
@@ -174,8 +178,8 @@ ethernet_interfaces:
     peer_interface: Ethernet8
     peer_type: l3leaf
     description: DC1-SVC3B_Ethernet8
-    type: switched
     shutdown: false
+    type: switched
     channel_group:
       id: 1
       mode: active
@@ -183,13 +187,13 @@ mlag_configuration:
   domain_id: DC1_L2LEAF2
   local_interface: Vlan4091
   peer_address: 10.255.252.16
+  peer_link: Port-Channel3
+  reload_delay_mlag: 300
+  reload_delay_non_mlag: 330
   peer_address_heartbeat:
     peer_ip: 192.168.200.113
     vrf: MGMT
   dual_primary_detection_delay: 5
-  peer_link: Port-Channel3
-  reload_delay_mlag: 300
-  reload_delay_non_mlag: 330
 ip_igmp_snooping:
   globally_enabled: true
   vlans:

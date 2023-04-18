@@ -34,7 +34,7 @@
 
 | Management Interface | description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | -  | - |
+| Management1 | oob_management | oob | MGMT | - | - |
 
 ### Management Interfaces Device Configuration
 
@@ -70,7 +70,8 @@ interface Management1
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false|
+| default | False |
+
 ### IP Routing Device Configuration
 
 ```eos
@@ -81,7 +82,7 @@ interface Management1
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false |
+| default | False |
 
 # Multicast
 
@@ -101,7 +102,7 @@ Default maintenance bgp profile: **BP1**
 
 Default maintenance interface profile: **IP1**
 
-Default maintenance unit profile: **IP1**
+Default maintenance unit profile: **UP1**
 
 ### Maintenance profiles
 
@@ -124,6 +125,7 @@ Default maintenance unit profile: **IP1**
 
 | Unit | Interface groups | BGP groups | Unit profile | Quiesce |
 | ---- | ---------------- | ---------- | ------------ | ------- |
+| System | - | - | UP1 | No |
 | UNIT1 | INTERFACE_GROUP_1 | BGP_GROUP_1<br/>BGP_GROUP_2 | UP1 | No |
 
 ### Maintenance configuration
@@ -141,7 +143,7 @@ maintenance
       initiator route-map RM-MAINTENANCE3 inout
    profile bgp BP1 default
    profile interface IP1 default
-   profile unit IP1 default
+   profile unit UP1 default
    !
    profile interface IP1
       rate-monitoring load-interval 10
@@ -153,6 +155,8 @@ maintenance
    !
    profile unit UP2
       on-boot duration 600
+   !
+   unit System
    !
    unit UNIT1
       group bgp BGP_GROUP_1

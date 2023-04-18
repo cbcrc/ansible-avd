@@ -8,6 +8,8 @@
 - [Internal VLAN Allocation Policy](#internal-vlan-allocation-policy)
   - [Internal VLAN Allocation Policy Summary](#internal-vlan-allocation-policy-summary)
 - [Interfaces](#interfaces)
+  - [Ethernet Interfaces](#ethernet-interfaces)
+  - [Port-Channel Interfaces](#port-channel-interfaces)
 - [Routing](#routing)
   - [IP Routing](#ip-routing)
   - [IPv6 Routing](#ipv6-routing)
@@ -33,7 +35,7 @@
 
 | Management Interface | description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | -  | - |
+| Management1 | oob_management | oob | MGMT | - | - |
 
 ### Management Interfaces Device Configuration
 
@@ -61,6 +63,46 @@ interface Management1
 
 # Interfaces
 
+## Ethernet Interfaces
+
+### Ethernet Interfaces Summary
+
+#### L2
+
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
+| --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
+
+*Inherited from Port-Channel Interface
+
+### Ethernet Interfaces Device Configuration
+
+```eos
+!
+interface Ethernet1
+   no switchport
+   traffic-policy input BLUE-C1-POLICY
+   traffic-policy output BLUE-C2-POLICY
+```
+
+## Port-Channel Interfaces
+
+### Port-Channel Interfaces Summary
+
+#### L2
+
+| Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
+| --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
+
+### Port-Channel Interfaces Device Configuration
+
+```eos
+!
+interface Port-Channel2
+   no switchport
+   traffic-policy input BLUE-C1-POLICY
+   traffic-policy output BLUE-C2-POLICY
+```
+
 # Routing
 
 ## IP Routing
@@ -69,7 +111,8 @@ interface Management1
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false|
+| default | False |
+
 ### IP Routing Device Configuration
 
 ```eos
@@ -80,7 +123,7 @@ interface Management1
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false |
+| default | False |
 
 # Multicast
 
@@ -94,8 +137,8 @@ interface Management1
 
 | Field Set Name | Values |
 | -------------- | ------ |
-| DEMO-01 | 10.0.0.0/8<br/>192.168.0.0/16|
-| DEMO-02 | 172.16.0.0/12<br/>224.0.0.0/8|
+| DEMO-01 | 10.0.0.0/8<br/>192.168.0.0/16 |
+| DEMO-02 | 172.16.0.0/12<br/>224.0.0.0/8 |
 
 **IPv6 Field sets**
 
@@ -127,6 +170,14 @@ No IPv6 field-set configured.
 | BLUE-C2-POLICY-01 | ipv4 | 10.0.0.0/8<br/>192.168.0.0/16 | ANY | tcp<br/>icmp | 1,10-20 | ANY | action: PASS<br/>traffic-class: 5 |
 | BLUE-C2-POLICY-02 | ipv4 | DEMO-01<br/>DEMO-02 | ANY | tcp<br/>icmp | SERVICE-DEMO | ANY | action: PASS<br/>counter: DEMO-TRAFFIC<br/>dscp marking: 60 |
 | BLUE-C2-POLICY-03 | ipv4 | DEMO-01 | ANY | tcp | ANY | ANY | action: DROP<br/>logging |
+
+
+#### Traffic-Policy Interfaces
+
+| Interface | Input Traffic-Policy | Output Traffic-Policy |
+| --------- | -------------------- | --------------------- |
+| Ethernet1 | BLUE-C1-POLICY | BLUE-C2-POLICY |
+| Port-Channel2 | BLUE-C1-POLICY | BLUE-C2-POLICY |
 
 ### Traffic Policies Device Configuration
 

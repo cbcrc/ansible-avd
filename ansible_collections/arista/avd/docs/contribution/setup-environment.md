@@ -1,6 +1,6 @@
-# Setup Ansible AVD environment
+# Setup Ansible AVD Environment
 
-Two methods can be used get Ansible up and running quickly with all the requirements to leverage __ansible-avd__:
+Two methods can be used get Ansible up and running quickly with all the requirements to leverage **ansible-avd**:
 A Python Virtual Environment or [Docker container](https://hub.docker.com/repository/docker/avdteam/base).
 
 In both scenario, this document will leverage git approach to create a local environment with collections installed in their respective folders and additional folders for all your content. It means, all examples will be based on the following folder structure:
@@ -15,9 +15,9 @@ In both scenario, this document will leverage git approach to create a local env
 
 ## Ansible runner requirements
 
-As described in [requirement page](../installation/requirements.md), your runner should run Python 3.8 or Docker engine with [`docker-compose`](https://docs.docker.com/compose/install/).
+As described in [requirement page](../installation/collection-installation.md), your runner should run Python 3.8 or Docker engine with [`docker-compose`](https://docs.docker.com/compose/install/).
 
-Besides that, local runner will read your gitconfig file to let you manipulate files in container as if you were on your host. So if you have not yet configured git on your host, it is required to at least create a [basic git](https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup) configuration file:
+Besides that, the local runner will read your gitconfig file to let you manipulate files in container as if you were on your host. If you haven't configured Git on your host, it's required to at least create a [basic git](https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup) configuration file:
 
 ```shell
 # Create your username exposed in git commit
@@ -49,37 +49,37 @@ $ make start
 
 Or you can use a one-liner script available in ansible-avd repository to create this structure for you. This script does following actions:
 
-- Create local folder for development
+- Create a local folder for development
 - Instantiate a local git repository (no remote)
 - Clone AVD and CVP collections
 - Deploy Makefile
 
-Because we are cloning ansible collection using git, it is recommended to read documentation about [how to setup ansible to use collection based on git clone](setup-git.html#update-your-ansiblecfg).
+Because we're cloning Ansible collection using Git, it's recommended to read documentation about [how to setup ansible to use collection based on git clone](setup-git.md#update-your-ansiblecfg).
 
-__To use AVD only__
+## Environment with latest stable
 
-This one-liner will install AVD and CVP collection using latest version released on github. These branches might have some difference with the devel branch.
+This one-liner will install AVD and CVP collection using latest version released on GitHub. These branches might have some difference with the devel branch.
 
 ```shell
-$ sh -c "$(curl -fsSL https://get.avd.sh)"
+sh -c "$(curl -fsSL https://get.avd.sh)"
 ```
 
-__To develop with AVD__
+## Development environment with AVD
 
 This one-liner will install AVD using `devel` branch.
 
 ```shell
-$ sh -c "$(curl -fsSL https://get.avd.sh/dev/)"
+sh -c "$(curl -fsSL https://get.avd.sh/dev/)"
 ```
 
 !!! warning
-    As devel branch is always moving on, datamodel might change and demo content could be broken. It should be used for development only.
+    As the devel branch always includes the latest features and updates, the data models might change without notice and demo content could be broken. It should be used for development only.
 
 ## Use docker as AVD shell
 
 In this approach Docker container will be leveraged to provides all the AVD requirements and playbooks and collection will be shared from your localhost to the container.
 
-This approach make the run process easier as all libraries are pre-configured in container and you can continue to use your preferred text editor to edit and build your content.
+This approach will make the run process easier as all libraries are pre-configured in the container and you can continue to use your preferred text editor to edit and build your content.
 
 Considering you have deployed [Makefile](https://github.com/aristanetworks/ansible-avd/blob/devel/development/Makefile) described in previous section, all the outputs will provide native docker command and the Make command.
 
@@ -88,7 +88,7 @@ Considering you have deployed [Makefile](https://github.com/aristanetworks/ansib
 When using installation script to create your own AVD environment, a [`Makefile`](https://github.com/aristanetworks/ansible-avd/blob/devel/development/Makefile) is deployed under `./ansible-arista` to automate some common commands:
 
 ```shell
-$ make <your command>
+make <your command>
 ```
 
 #### Commands for docker-compose
@@ -96,11 +96,11 @@ $ make <your command>
 - `start`: Start docker compose stack to develop with AVD and CVP collection (alias: `start`)
   - Deploy an [mkdoc](https://hub.docker.com/repository/docker/titom73/mkdocs) instance to expose AVD documentation with live reload for development purposes.
   - Deploy an [mkdoc](https://hub.docker.com/repository/docker/titom73/mkdocs) instance to expose CVP documentation with live reload for development purposes.
-  - Deploy an [AVD runner](https://hub.docker.com/repository/docker/avdteam/base) with a pseudo terminal connected to shell for ansible execution
+  - Deploy an [AVD runner](https://hub.docker.com/repository/docker/avdteam/base) with a pseudo terminal connected to shell for Ansible execution
 - `stop`: Stop docker compose stack and remove containers (alias: `stop`)
-- `shell`: Run a shell attached to ansible container (alias: `shell`)
+- `shell`: Run a shell attached to Ansible container (alias: `shell`)
 - `reload`: Stop and Start docker-compose stack
-- `ansible-upgrade`: To upgrade ansible in your runner in conjunction with `ANSIBLE_VERSION`
+- `ansible-upgrade`: To upgrade Ansible in your runner in conjunction with `ANSIBLE_VERSION`
 
 ```shell
 $ make ansible-upgrade ANSIBLE_VERSION=2.10.7
@@ -120,7 +120,7 @@ ansible 2.10.7
 ### Commands for docker only
 
 - `run`: Run a [docker container](https://hub.docker.com/repository/docker/avdteam/base) with local folder mounted under `/projects`. This command supports some option to test development version like:
-  - `ANSIBLE_VERSION`: Specific version of ansible to install during container startup.
+  - `ANSIBLE_VERSION`: Specific version of Ansible to install during container startup.
   - `PIP_REQ`: Specific pip requirements file to install during container startup.
 - `vscode`: start a VScode container available in your browser to edit your local files.
 
@@ -143,11 +143,11 @@ Collecting ansible==2.10
 #### Command for image management
 
 - `update`: Get latest version of [AVD runner](https://hub.docker.com/repository/docker/avdteam/base) and [mkdoc](https://hub.docker.com/repository/docker/titom73/mkdocs) servers
-- `clean`: Remove avd image from local repository
+- `clean`: Remove AVD image from local repository
 
 ### Run AVD shell
 
-We are going to start a [new container](https://hub.docker.com/repository/docker/avdteam/base) running ansible with all the python requirements and mount local folder under `/projects`. if image is missing, docker will pull out image for you automatically.
+We're going to start a [new container](https://hub.docker.com/repository/docker/avdteam/base) running Ansible with all the python requirements and mount local folder under `/projects`. If the image is missing, docker will pull it automatically.
 
 ```shell
 $ docker run --rm -it -v ${pwd}/:/projects avdteam/base:3.6
@@ -170,7 +170,7 @@ Agent pid 45
 ➜  /projects
 ```
 
-You can use a Make command to run exact same set of actions:
+You can use the Make command to run the exact same set of actions:
 
 ```shell
 $ make run
@@ -203,7 +203,7 @@ drwxr-xr-x 24 root root  768 Sep  4 15:47 ansible-avd-cloudvision-demo
 drwxr-xr-x 24 root root  768 Sep  4 15:47 Makefile
 ```
 
-You can validate everything is set up correctly:
+You can validate if everything is set up correctly:
 
 ```shell
 ➜  /projects python --version
@@ -227,7 +227,7 @@ $
 
 ### Get latest image of AVD container
 
-Time to time, AVD container is updated to reflect some changes in either python requirements or ansible version. Because your docker engine won't automatically get latest version, it might be important to update manually this container:
+The AVD container is updated frequently, to reflect some changes in either python requirements or Ansible version. Because your docker engine won't get the latest version automatically, it's important to manually update this container:
 
 ```shell
 $ docker pull avdteam/base:3.6
@@ -244,20 +244,20 @@ Your environment is now ready and you can start to build your own project levera
 
 ## Using Python 3 Virtual Environment feature
 
-This section describes how to configure python to run ansible and AVD.
+This section describes how to configure python to run the ansible-AVD.
 
 As a requirement, we consider python3 as the default python interpreter and pip3 as package manager for python3. Some differences can be spotted depending on your own operating system and how they package python.
 
-__Disclaimer__: Not preferred method. If you are not an experienced user, please use docker approach.
+**Disclaimer**: Not a preferred method. If you aren't an experienced user, please use docker approach.
 
 In a shell, install `virtualenv` package:
 
 ```shell
 # install virtualenv via pip3
-$ sudo pip3 install virtualenv
+sudo pip3 install virtualenv
 ```
 
-Create a dedicated virtual-environment where AVD will install all required Python pakages:
+Create a dedicated virtual environment where AVD will install all required Python packages:
 
 ```shell
 $ pwd

@@ -135,8 +135,8 @@ port_channel_interfaces:
     description: DC1_SVC3_Po7
     type: switched
     shutdown: false
-    vlans: 110-111,120-121,130-131,140-141,150,160-161,210-211,250,310-311,350
     mode: trunk
+    vlans: 110-111,120-121,130-131,140-141,150,160-161,210-211,250,310-311,350
     mlag: 1
 ethernet_interfaces:
   Ethernet3:
@@ -164,8 +164,8 @@ ethernet_interfaces:
     peer_interface: Ethernet7
     peer_type: l3leaf
     description: DC1-SVC3A_Ethernet7
-    type: switched
     shutdown: false
+    type: switched
     channel_group:
       id: 1
       mode: active
@@ -174,8 +174,8 @@ ethernet_interfaces:
     peer_interface: Ethernet7
     peer_type: l3leaf
     description: DC1-SVC3B_Ethernet7
-    type: switched
     shutdown: false
+    type: switched
     channel_group:
       id: 1
       mode: active
@@ -183,13 +183,13 @@ mlag_configuration:
   domain_id: DC1_L2LEAF2
   local_interface: Vlan4091
   peer_address: 10.255.252.17
+  peer_link: Port-Channel3
+  reload_delay_mlag: 300
+  reload_delay_non_mlag: 330
   peer_address_heartbeat:
     peer_ip: 192.168.200.114
     vrf: MGMT
   dual_primary_detection_delay: 5
-  peer_link: Port-Channel3
-  reload_delay_mlag: 300
-  reload_delay_non_mlag: 330
 ip_igmp_snooping:
   globally_enabled: true
   vlans:

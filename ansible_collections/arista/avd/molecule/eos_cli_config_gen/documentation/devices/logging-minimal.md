@@ -33,7 +33,7 @@
 
 | Management Interface | description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | -  | - |
+| Management1 | oob_management | oob | MGMT | - | - |
 
 ### Management Interfaces Device Configuration
 
@@ -57,13 +57,18 @@ interface Management1
 | -----| ----- |
 | Console | informational |
 | Monitor | debugging |
+| Buffer | - |
+
+**Syslog facility value:** syslog
 
 ### Logging Servers and Features Device Configuration
 
 ```eos
 !
+logging buffered 64000
 logging console informational
 logging monitor debugging
+logging facility syslog
 ```
 
 # Internal VLAN Allocation Policy
@@ -86,7 +91,8 @@ logging monitor debugging
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false|
+| default | False |
+
 ### IP Routing Device Configuration
 
 ```eos
@@ -97,7 +103,7 @@ logging monitor debugging
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false |
+| default | False |
 
 # Multicast
 

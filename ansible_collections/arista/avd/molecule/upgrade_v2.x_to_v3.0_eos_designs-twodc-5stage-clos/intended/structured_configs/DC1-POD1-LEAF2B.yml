@@ -12,6 +12,7 @@ router_bgp:
       type: ipv4
       remote_as: '65112'
       next_hop_self: true
+      description: DC1-POD1-LEAF2A
       password: vnEaG8gMeQf3d3cN6PktXQ==
       maximum_routes: 12000
       send_community: all
@@ -26,10 +27,10 @@ router_bgp:
       type: evpn
       update_source: Loopback0
       bfd: true
-      ebgp_multihop: '5'
       password: q+VNViP5i4rVjW1cxFv2wA==
       send_community: all
       maximum_routes: 0
+      ebgp_multihop: 5
       remote_as: 65110
   address_family_ipv4:
     peer_groups:
@@ -187,14 +188,9 @@ management_api_http:
   enable_vrfs:
     MGMT: {}
   enable_https: true
-eos_cli: "interface Loopback1002\n  description Loopback created from raw_eos_cli under l3leaf node-group RACK2_MLAG\n\ninterface Loopback1111\n  description Loopback created from raw_eos_cli under platform_settings vEOS-LAB\n\ninterface Loopback1000\n  description Loopback created from raw_eos_cli under VRF Common_VRF\n"
-struct_cfg:
-  router_bgp:
-    peer_groups:
-      EVPN-OVERLAY-PEERS:
-        remote_as: 65110
-      IPv4-UNDERLAY-PEERS:
-        remote_as: 65110
+eos_cli: "interface Loopback1002\n  description Loopback created from raw_eos_cli under l3leaf node-group RACK2_MLAG\n\ninterface Loopback1111\n
+  \ description Loopback created from raw_eos_cli under platform_settings vEOS-LAB\n\ninterface Loopback1000\n  description Loopback
+  created from raw_eos_cli under VRF Common_VRF\n"
 vlans:
   4093:
     tenant: system
@@ -228,8 +224,8 @@ vlan_interfaces:
   Vlan4093:
     description: MLAG_PEER_L3_PEERING
     shutdown: false
-    ip_address: 172.20.110.3/31
     mtu: 1500
+    ip_address: 172.20.110.3/31
   Vlan4094:
     description: MLAG_PEER
     shutdown: false
@@ -242,24 +238,22 @@ vlan_interfaces:
     - opzone
     description: Tenant_A_OP_Zone_1
     shutdown: false
-    vrf: Common_VRF
     ip_address_virtual: 10.1.10.1/24
+    vrf: Common_VRF
   Vlan111:
     tenant: Tenant_A
     tags:
     - opzone
     description: Tenant_A_OP_Zone_2
     shutdown: true
-    vrf: Common_VRF
     ip_address_virtual: 10.1.11.1/24
+    vrf: Common_VRF
   Vlan112:
     tenant: Tenant_A
     tags:
     - opzone
     description: Tenant_A_OP_Zone_3
     shutdown: false
-    vrf: Common_VRF
-    ip_address_virtual: 10.1.12.1/24
     eos_cli: 'comment
 
       Comment created from raw_eos_cli under SVI 112 in VRF Common_VRF
@@ -267,6 +261,8 @@ vlan_interfaces:
       EOF
 
       '
+    ip_address_virtual: 10.1.12.1/24
+    vrf: Common_VRF
   Vlan4085:
     description: L2LEAF_INBAND_MGMT
     shutdown: false
@@ -291,33 +287,30 @@ port_channel_interfaces:
     description: RACK2_MLAG_Po1
     type: switched
     shutdown: false
-    vlans: 110-112,2500,2600,4085
     mode: trunk
     service_profile: QOS-PROFILE
+    vlans: 110-112,2500,2600,4085
     mlag: 3
   Port-Channel16:
     description: server-1_PortChannel
     type: switched
     shutdown: false
-    mode: access
-    vlans: 110
-    mlag: 16
     service_profile: bar
+    mode: access
+    vlans: '110'
+    mlag: 16
   Port-Channel17:
     description: server-1_PortChannel
     type: switched
     shutdown: false
-    mode: access
-    vlans: 110
-    mlag: 17
     service_profile: foo
+    mode: access
+    vlans: '110'
+    mlag: 17
   Port-Channel18:
     description: server-1_PortChannel
     type: switched
     shutdown: false
-    mode: access
-    vlans: 110
-    mlag: 18
     service_profile: foo
     eos_cli: 'comment
 
@@ -326,13 +319,13 @@ port_channel_interfaces:
       EOF
 
       '
+    mode: access
+    vlans: '110'
+    mlag: 18
   Port-Channel19:
     description: server-1_PortChannel
     type: switched
     shutdown: false
-    mode: access
-    vlans: 110
-    mlag: 19
     service_profile: foo
     eos_cli: 'comment
 
@@ -341,6 +334,9 @@ port_channel_interfaces:
       EOF
 
       '
+    mode: access
+    vlans: '110'
+    mlag: 19
 ethernet_interfaces:
   Ethernet5:
     peer: DC1-POD1-LEAF2A
@@ -367,32 +363,32 @@ ethernet_interfaces:
     peer_interface: Ethernet5
     peer_type: spine
     description: P2P_LINK_TO_DC1-POD1-SPINE1_Ethernet5
+    shutdown: false
     mtu: 1500
     service_profile: QOS-PROFILE
+    type: routed
     ptp:
       enable: true
-    type: routed
-    shutdown: false
     ip_address: 172.17.110.9/31
   Ethernet2:
     peer: DC1-POD1-SPINE2
     peer_interface: Ethernet5
     peer_type: spine
     description: P2P_LINK_TO_DC1-POD1-SPINE2_Ethernet5
+    shutdown: false
     mtu: 1500
     service_profile: QOS-PROFILE
+    type: routed
     ptp:
       enable: true
-    type: routed
-    shutdown: false
     ip_address: 172.17.110.11/31
   Ethernet3:
     peer: DC1-POD1-L2LEAF2A
     peer_interface: Ethernet2
     peer_type: l2leaf
     description: DC1-POD1-L2LEAF2A_Ethernet2
-    type: switched
     shutdown: false
+    type: switched
     channel_group:
       id: 3
       mode: active
@@ -401,8 +397,8 @@ ethernet_interfaces:
     peer_interface: Ethernet2
     peer_type: l2leaf
     description: DC1-POD1-L2LEAF2B_Ethernet2
-    type: switched
     shutdown: false
+    type: switched
     channel_group:
       id: 3
       mode: active
@@ -425,10 +421,7 @@ ethernet_interfaces:
     type: switched
     shutdown: false
     mode: access
-    vlans: 110
-    channel_group:
-      id: 16
-      mode: active
+    vlans: '110'
     service_profile: bar
     eos_cli: 'comment
 
@@ -437,6 +430,9 @@ ethernet_interfaces:
       EOF
 
       '
+    channel_group:
+      id: 16
+      mode: active
   Ethernet17:
     peer: server-1
     peer_interface: Eth4
@@ -445,10 +441,7 @@ ethernet_interfaces:
     type: switched
     shutdown: false
     mode: access
-    vlans: 110
-    channel_group:
-      id: 17
-      mode: active
+    vlans: '110'
     service_profile: foo
     eos_cli: 'comment
 
@@ -457,6 +450,9 @@ ethernet_interfaces:
       EOF
 
       '
+    channel_group:
+      id: 17
+      mode: active
   Ethernet18:
     peer: server-1
     peer_interface: Eth6
@@ -465,10 +461,7 @@ ethernet_interfaces:
     type: switched
     shutdown: false
     mode: access
-    vlans: 110
-    channel_group:
-      id: 18
-      mode: active
+    vlans: '110'
     service_profile: foo
     eos_cli: 'comment
 
@@ -477,6 +470,9 @@ ethernet_interfaces:
       EOF
 
       '
+    channel_group:
+      id: 18
+      mode: active
   Ethernet19:
     peer: server-1
     peer_interface: Eth8
@@ -485,10 +481,7 @@ ethernet_interfaces:
     type: switched
     shutdown: false
     mode: access
-    vlans: 110
-    channel_group:
-      id: 19
-      mode: active
+    vlans: '110'
     service_profile: foo
     eos_cli: 'comment
 
@@ -497,6 +490,9 @@ ethernet_interfaces:
       EOF
 
       '
+    channel_group:
+      id: 19
+      mode: active
 mlag_configuration:
   domain_id: RACK2_MLAG
   local_interface: Vlan4094
@@ -578,9 +574,9 @@ vxlan_interface:
   Vxlan1:
     description: DC1-POD1-LEAF2B_VTEP
     vxlan:
+      udp_port: 4789
       source_interface: Loopback1
       virtual_router_encapsulation_mac_address: mlag-system-id
-      udp_port: 4789
       vlans:
         110:
           vni: 10110

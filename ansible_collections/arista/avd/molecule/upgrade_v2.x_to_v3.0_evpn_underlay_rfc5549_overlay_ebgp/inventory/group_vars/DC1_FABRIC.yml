@@ -8,7 +8,7 @@ fabric_name: DC1_FABRIC
 # Assign range larger then total [ spines * total potential leafs * 2 ]
 # underlay_p2p_network_summary: 172.31.255.0/24
 
-# Point to Point Underlay with IPv6 Unumberred
+# Point to Point Underlay with IPv6 Unnumbered
 underlay_rfc5549: true
 
 # IP address range for evpn loopback for all switches in fabric, assigned as /32s
@@ -35,13 +35,13 @@ evpn_hostflap_detection:
 # bgp peer groups passwords
 bgp_peer_groups:
   IPv4_UNDERLAY_PEERS:
-    password: "AQQvKeimxJu+uGQ/yYvv9w=="
+    password: "af6F4WLl4wUrWRZcwbEwkQ=="
     name: "UNDERLAY_PEERS"
   EVPN_OVERLAY_PEERS:
     password: "q+VNViP5i4rVjW1cxFv2wA=="
   MLAG_IPv4_UNDERLAY_PEER:
     name: "MLAG_PEER"
-    password: "vnEaG8gMeQf3d3cN6PktXQ=="
+    password: "arwUnrq9ydqIhjfTwRhAlg=="
 
 # Spine Switches
 spine:
@@ -191,7 +191,7 @@ leaf_bgp_defaults:
   - no bgp default ipv4-unicast
   - distance bgp 20 200 200
 
-# Upodate p2p mtu 9000 -> 1500
+# Update p2p mtu 9000 -> 1500
 p2p_uplinks_mtu: 1500
 
 # Adjust default bfd values

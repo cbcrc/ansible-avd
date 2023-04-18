@@ -56,8 +56,8 @@
 
 | Management Interface | description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | -  | - |
-| Vlan4085 | L2LEAF_INBAND_MGMT | inband | default | -  | - |
+| Management1 | oob_management | oob | MGMT | - | - |
+| Vlan4085 | L2LEAF_INBAND_MGMT | inband | default | - | - |
 
 ### Management Interfaces Device Configuration
 
@@ -72,6 +72,7 @@ interface Management1
 interface Vlan4085
    description L2LEAF_INBAND_MGMT
    no shutdown
+   mtu 1500
    ip address 172.21.110.6/24
 ```
 
@@ -79,9 +80,9 @@ interface Vlan4085
 
 ### Management API HTTP Summary
 
-| HTTP | HTTPS |
-| ---- | ----- |
-| False | True |
+| HTTP | HTTPS | Default Services |
+| ---- | ----- | ---------------- |
+| False | True | - |
 
 ### Management API VRF Access
 
@@ -107,9 +108,9 @@ management api http-commands
 
 ### Local Users Summary
 
-| User | Privilege | Role |
-| ---- | --------- | ---- |
-| admin | 15 | network-admin |
+| User | Privilege | Role | Disabled |
+| ---- | --------- | ---- | -------- |
+| admin | 15 | network-admin | False |
 
 ### Local Users Device Configuration
 
@@ -172,7 +173,7 @@ STP mode: **mstp**
 
 ### Global Spanning-Tree Settings
 
-Spanning Tree disabled for VLANs: **4094**
+- Spanning Tree disabled for VLANs: **4094**
 
 ## Spanning Tree Device Configuration
 
@@ -269,7 +270,7 @@ vlan 4094
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet1 | DC1-POD1-LEAF2A_Ethernet4 | *trunk | *110-113,1100-1102,2500,2600-2601,4085 | *- | *- | 1 |
+| Ethernet1 | DC1.POD1.LEAF2A_Ethernet4 | *trunk | *110-113,1100-1102,2500,2600-2601,4085 | *- | *- | 1 |
 | Ethernet2 | DC1-POD1-LEAF2B_Ethernet4 | *trunk | *110-113,1100-1102,2500,2600-2601,4085 | *- | *- | 1 |
 | Ethernet3 | MLAG_PEER_DC1-POD1-L2LEAF2A_Ethernet3 | *trunk | *2-4094 | *- | *['MLAG'] | 3 |
 | Ethernet4 | MLAG_PEER_DC1-POD1-L2LEAF2A_Ethernet4 | *trunk | *2-4094 | *- | *['MLAG'] | 3 |
@@ -281,7 +282,7 @@ vlan 4094
 ```eos
 !
 interface Ethernet1
-   description DC1-POD1-LEAF2A_Ethernet4
+   description DC1.POD1.LEAF2A_Ethernet4
    no shutdown
    channel-group 1 mode active
 !
@@ -341,14 +342,13 @@ interface Port-Channel3
 
 | Interface | Description | VRF |  MTU | Shutdown |
 | --------- | ----------- | --- | ---- | -------- |
-| Vlan4094 |  MLAG_PEER  |  default  |  1500  |  false  |
+| Vlan4094 | MLAG_PEER | default | 1500 | False |
 
 #### IPv4
 
 | Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
 | Vlan4094 |  default  |  172.20.110.3/31  |  -  |  -  |  -  |  -  |  -  |
-
 
 ### VLAN Interfaces Device Configuration
 
@@ -378,7 +378,8 @@ service routing protocols model multi-agent
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | true|| MGMT | false |
+| default | True |
+| MGMT | False |
 
 ### IP Routing Device Configuration
 
@@ -393,8 +394,8 @@ no ip routing vrf MGMT
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false || MGMT | false |
-
+| default | False |
+| MGMT | false |
 
 ## Static Routes
 
@@ -402,8 +403,8 @@ no ip routing vrf MGMT
 
 | VRF | Destination Prefix | Next Hop IP             | Exit interface      | Administrative Distance       | Tag               | Route Name                    | Metric         |
 | --- | ------------------ | ----------------------- | ------------------- | ----------------------------- | ----------------- | ----------------------------- | -------------- |
-| MGMT  | 0.0.0.0/0 |  192.168.1.254  |  -  |  1  |  -  |  -  |  - |
-| default  | 0.0.0.0/0 |  172.21.110.1  |  -  |  1  |  -  |  -  |  - |
+| MGMT | 0.0.0.0/0 | 192.168.1.254 | - | 1 | - | - | - |
+| default | 0.0.0.0/0 | 172.21.110.1 | - | 1 | - | - | - |
 
 ### Static Routes Device Configuration
 
@@ -419,8 +420,9 @@ ip route 0.0.0.0/0 172.21.110.1
 
 ### IP IGMP Snooping Summary
 
-IGMP snooping is globally enabled.
-
+| IGMP Snooping | Fast Leave | Interface Restart Query | Proxy | Restart Query Interval | Robustness Variable |
+| ------------- | ---------- | ----------------------- | ----- | ---------------------- | ------------------- |
+| Enabled | - | - | - | - | - |
 
 ### IP IGMP Snooping Device Configuration
 

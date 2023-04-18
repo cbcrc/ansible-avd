@@ -1,3 +1,4 @@
+{# doc - hardware counters #}
 {% if hardware_counters is defined and hardware_counters is not none %}
 
 ## Hardware Counters
@@ -8,19 +9,27 @@
 
 | Feature | Flow Direction |
 | ------- | -------------- |
-{% if hardware_counters is defined and hardware_counters is not none %}
-{%     if hardware_counters.features is defined and hardware_counters.features is not none %}
-{%         for feature in hardware_counters.features %}
-{%             for feature, direction in feature.items() %}
-| {{ feature }} | {{ direction }} |
+{%     if hardware_counters is arista.avd.defined %}
+{%         if hardware_counters.features is arista.avd.defined %}
+{%             for feature in hardware_counters.features %}
+{%                 if 'name' in feature %}
+| {{ feature.name }} | {{ feature.direction }} |
+{%                 else %}
+{%                     for feat in feature %}
+{%                         if 'name' in feat %}
+| {{ feat.name }} | {{ feat.direction }} |
+{%                         else %}
+| {{ feat }} | {{ feature[feat] }} |
+{%                         endif %}
+{%                     endfor %}
+{%                 endif %}
 {%             endfor %}
-{%         endfor %}
+{%         endif %}
 {%     endif %}
-{% endif %}
 
 ### Hardware Counters Configuration
 
 ```eos
-{% include 'eos/hardware-counters.j2' %}
+{%     include 'eos/hardware-counters.j2' %}
 ```
 {% endif %}

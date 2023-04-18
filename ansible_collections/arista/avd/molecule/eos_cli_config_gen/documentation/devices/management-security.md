@@ -6,6 +6,7 @@
 - [Authentication](#authentication)
 - [Management Security](#management-security)
   - [Management Security Summary](#management-security-summary)
+  - [Management Security SSL Profiles](#management-security-ssl-profiles)
   - [Management Security Configuration](#management-security-configuration)
 - [Monitoring](#monitoring)
 - [Internal VLAN Allocation Policy](#internal-vlan-allocation-policy)
@@ -35,7 +36,7 @@
 
 | Management Interface | description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | -  | - |
+| Management1 | oob_management | oob | MGMT | - | - |
 
 ### Management Interfaces Device Configuration
 
@@ -53,12 +54,22 @@ interface Management1
 
 ## Management Security Summary
 
-Management Security entropy source is **hardware**
+| Settings | Value |
+| -------- | ----- |
+| Entropy source | hardware |
+| Common password encryption key | True |
+| Reversible password encryption | aes-256-gcm |
+| Minimum password length | 17 |
 
-Management Security password encryption is common.
+## Management Security SSL Profiles
 
-Management Security password minimum lenght is **17** characters.
-
+| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Cipher List |
+| ---------------- | --------------------- | -------------------- | ------------ | ----------- |
+| certificate-profile | - | eAPI.crt | eAPI.key | - |
+| cipher-list-profile | - | - | - | ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384 |
+| tls-single-version-profile-as-float | 1.0 | - | - | - |
+| tls-single-version-profile-as-string | 1.1 | - | - | - |
+| tls-versions-profile | 1.0 1.1 | - | - | - |
 
 ## Management Security Configuration
 
@@ -67,7 +78,18 @@ Management Security password minimum lenght is **17** characters.
 management security
    entropy source hardware
    password encryption-key common
+   password encryption reversible aes-256-gcm
    password minimum length 17
+   ssl profile certificate-profile
+      certificate eAPI.crt key eAPI.key
+   ssl profile cipher-list-profile
+      cipher-list ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384
+   ssl profile tls-single-version-profile-as-float
+      tls versions 1.0
+   ssl profile tls-single-version-profile-as-string
+      tls versions 1.1
+   ssl profile tls-versions-profile
+      tls versions 1.0 1.1
 ```
 
 # Monitoring
@@ -92,7 +114,8 @@ management security
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false|
+| default | False |
+
 ### IP Routing Device Configuration
 
 ```eos
@@ -103,7 +126,7 @@ management security
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false |
+| default | False |
 
 # Multicast
 

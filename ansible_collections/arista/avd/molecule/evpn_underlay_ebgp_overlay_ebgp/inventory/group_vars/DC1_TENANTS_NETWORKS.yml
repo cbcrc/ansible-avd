@@ -162,7 +162,7 @@ tenants:
         bgp_peers:
           123.1.1.10:
             remote_as: 1234
-            password: "AQQvKeimxJu+uGQ/yYvv9w=="
+            password: "oBztv71m2uhR7hh58/OCNA=="
             description: External IPv4 BGP peer
             send_community: standard extended
             maximum_routes: 0
@@ -178,7 +178,7 @@ tenants:
             local_as: 123
           123.1.1.11:
             remote_as: 1234
-            password: "AQQvKeimxJu+uGQ/yYvv9w=="
+            password: "oBztv71m2uhR7hh58/OCNA=="
             description: External IPv4 BGP peer
             send_community: standard extended
             maximum_routes: 0
@@ -216,11 +216,11 @@ tenants:
           - type: import
             address_family: evpn
             route_target: '65000:456'
-            # nodes not set - so all devices shold get this additional route target
+            # nodes not set - so all devices should get this additional route target
           - type: export
             address_family: evpn
             route_target: '65000:789'
-            # nodes not set - so all devices shold get this additional route target
+            # nodes not set - so all devices should get this additional route target
       Tenant_L3_VRF_Zone:
         vrf_vni: 15
         l3_interfaces:

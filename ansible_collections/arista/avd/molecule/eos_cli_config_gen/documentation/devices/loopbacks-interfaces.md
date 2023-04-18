@@ -35,7 +35,7 @@
 
 | Management Interface | description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | -  | - |
+| Management1 | oob_management | oob | MGMT | - | - |
 
 ### Management Interfaces Device Configuration
 
@@ -88,8 +88,8 @@ interface Management1
 #### ISIS
 
 | Interface | ISIS instance | ISIS metric | Interface mode |
-| -------- | -------- | -------- | -------- |
-| Loopback99 | ISIS_TEST |  100 |  point-to-point |
+| --------- | ------------- | ----------- | -------------- |
+| Loopback99 | ISIS_TEST | 100 | point-to-point |
 
 ### Loopback Interfaces Device Configuration
 
@@ -98,6 +98,10 @@ interface Management1
 interface Loopback0
    description EVPN_Overlay_Peering
    ip address 192.168.255.3/32
+   comment
+   Comment created from eos_cli under loopback_interfaces.Loopback0
+   EOF
+
 !
 interface Loopback1
    description VTEP_VXLAN_Tunnel_Source
@@ -133,7 +137,8 @@ interface Loopback100
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false|
+| default | False |
+
 ### IP Routing Device Configuration
 
 ```eos
@@ -144,7 +149,7 @@ interface Loopback100
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false |
+| default | False |
 
 # MPLS
 

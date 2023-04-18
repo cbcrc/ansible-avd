@@ -1,11 +1,17 @@
-{# eos - Hardware counters #}
+{# eos - hardware counters #}
 {% if hardware_counters.features is arista.avd.defined %}
 !
 {%     for feature in hardware_counters.features %}
-{%         for feature_name, apply_direction in feature.items() %}
-{%             if apply_direction is arista.avd.defined %}
-hardware counter feature {{ feature_name }} {{ apply_direction }}
-{%             endif %}
-{%         endfor %}
+{%         if 'name' in feature %}
+hardware counter feature {{ feature.name }} {{ feature.direction }}
+{%         else %}
+{%             for feat in feature %}
+{%                 if 'name' in feat %}
+hardware counter feature {{ feat.name }} {{ feat.direction }}
+{%                 else %}
+hardware counter feature {{ feat }} {{ feature[feat] }}
+{%                 endif %}
+{%             endfor %}
+{%         endif %}
 {%     endfor %}
 {% endif %}

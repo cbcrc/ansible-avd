@@ -17,10 +17,10 @@ router_bgp:
       type: evpn
       update_source: Loopback0
       bfd: true
-      ebgp_multihop: '5'
       password: q+VNViP5i4rVjW1cxFv2wA==
       send_community: all
       maximum_routes: 0
+      ebgp_multihop: 5
   address_family_ipv4:
     peer_groups:
       IPv4-UNDERLAY-PEERS:
@@ -123,12 +123,20 @@ router_bgp:
   vlans:
     110:
       tenant: Tenant_A
-      rd: 172.16.120.3:10110
+      rd: 172.16.120.3:99110
       route_targets:
         both:
-        - 10110:10110
+        - 99110:99110
       redistribute_routes:
       - learned
+      - router-mac system
+      eos_cli: 'comment
+
+        comment created from raw_eos_cli under router bgp svis inherited from svi profile
+
+        EOF
+
+        '
     111:
       tenant: Tenant_A
       rd: 172.16.120.3:50111
@@ -137,14 +145,30 @@ router_bgp:
         - 50111:50111
       redistribute_routes:
       - learned
+      - router-mac system
+      eos_cli: 'comment
+
+        comment created from raw_eos_cli under router bgp svi 111
+
+        EOF
+
+        '
     112:
       tenant: Tenant_A
-      rd: 172.16.120.3:50112
+      rd: 172.16.120.3:20112
       route_targets:
         both:
-        - 50112:50112
+        - 20112:20112
       redistribute_routes:
       - learned
+      - router-mac system
+      eos_cli: 'comment
+
+        comment created from raw_eos_cli under router bgp svis inherited from svi parent profile
+
+        EOF
+
+        '
     2500:
       tenant: Tenant_A
       rd: 172.16.120.3:2500
@@ -155,12 +179,20 @@ router_bgp:
       - learned
     2600:
       tenant: Tenant_A
-      rd: 172.16.120.3:2600
+      rd: 172.16.120.3:32600
       route_targets:
         both:
-        - 2600:2600
+        - 32600:32600
       redistribute_routes:
       - learned
+      - router-mac system
+      eos_cli: 'comment
+
+        comment created from raw_eos_cli under router bgp l2vlan 2600
+
+        EOF
+
+        '
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
@@ -208,41 +240,42 @@ management_api_http:
   enable_vrfs:
     MGMT: {}
   enable_https: true
-eos_cli: "interface Loopback1111\n  description Loopback created from raw_eos_cli under platform_settings vEOS-LAB\n\ninterface Loopback1000\n  description Loopback created from raw_eos_cli under VRF Common_VRF\n"
+eos_cli: "interface Loopback1111\n  description Loopback created from raw_eos_cli under platform_settings vEOS-LAB\n\ninterface Loopback1000\n
+  \ description Loopback created from raw_eos_cli under VRF Common_VRF\n"
 ethernet_interfaces:
   Ethernet1:
     peer: DC1-POD2-SPINE1
     peer_interface: Ethernet3
     peer_type: spine
     description: P2P_LINK_TO_DC1-POD2-SPINE1_Ethernet3
+    shutdown: false
     mtu: 1500
     service_profile: QOS-PROFILE
+    type: routed
     ptp:
       enable: true
-    type: routed
-    shutdown: false
     ip_address: 172.17.120.1/31
   Ethernet2:
     peer: DC1-POD2-SPINE2
     peer_interface: Ethernet3
     peer_type: spine
     description: P2P_LINK_TO_DC1-POD2-SPINE2_Ethernet3
+    shutdown: false
     mtu: 1500
     service_profile: QOS-PROFILE
+    type: routed
     ptp:
       enable: true
-    type: routed
-    shutdown: false
     ip_address: 172.17.120.3/31
   Ethernet3:
     peer: DC1-RS2
     peer_interface: Ethernet3
     peer_type: overlay-controller
     description: P2P_LINK_TO_DC1-RS2_Ethernet3
+    shutdown: false
     mtu: 1500
     service_profile: QOS-PROFILE
     type: routed
-    shutdown: false
     ip_address: 172.17.10.12/31
 loopback_interfaces:
   Loopback0:
@@ -331,26 +364,22 @@ vlan_interfaces:
     - opzone
     description: set from structured_config on svi (was Tenant_A_OP_Zone_1)
     shutdown: false
-    vrf: Common_VRF
     ip_address_virtual: 10.1.10.1/24
-    struct_cfg:
-      description: set from structured_config on svi (was Tenant_A_OP_Zone_1)
+    vrf: Common_VRF
   Vlan111:
     tenant: Tenant_A
     tags:
     - opzone
     description: Tenant_A_OP_Zone_2
     shutdown: true
-    vrf: Common_VRF
     ip_address_virtual: 10.1.11.1/24
+    vrf: Common_VRF
   Vlan112:
     tenant: Tenant_A
     tags:
     - opzone
     description: Tenant_A_OP_Zone_3
     shutdown: false
-    vrf: Common_VRF
-    ip_address_virtual: 10.1.12.1/24
     eos_cli: 'comment
 
       Comment created from raw_eos_cli under SVI 112 in VRF Common_VRF
@@ -358,14 +387,16 @@ vlan_interfaces:
       EOF
 
       '
+    ip_address_virtual: 10.1.12.1/24
+    vrf: Common_VRF
   Vlan113:
     tenant: Tenant_A
     tags:
     - opzone
     description: SVI_with_no_vxlan
     shutdown: false
-    vrf: Common_VRF
     ip_address_virtual: 10.10.13.1/24
+    vrf: Common_VRF
   Vlan1102:
     tenant: Tenant_A
     tags:
@@ -373,8 +404,8 @@ vlan_interfaces:
     - web
     description: test_svi
     shutdown: false
-    vrf: vrf_with_loopbacks_dc1_pod1_only
     ip_address_virtual: 10.102.100.1/24
+    vrf: vrf_with_loopbacks_dc1_pod1_only
   Vlan1100:
     tenant: Tenant_A
     tags:
@@ -382,8 +413,8 @@ vlan_interfaces:
     - web
     description: test_svi
     shutdown: false
-    vrf: vrf_with_loopbacks_from_overlapping_pool
     ip_address_virtual: 10.100.100.1/24
+    vrf: vrf_with_loopbacks_from_overlapping_pool
   Vlan1101:
     tenant: Tenant_A
     tags:
@@ -391,33 +422,25 @@ vlan_interfaces:
     - web
     description: test_svi
     shutdown: false
-    vrf: vrf_with_loopbacks_from_pod_pools
     ip_address_virtual: 10.101.100.1/24
-struct_cfg:
-  domain_list:
-  - structured-config.set.under.vrf.common-vrf
-virtual_source_nat_vrfs:
-  vrf_with_loopbacks_from_overlapping_pool:
-    ip_address: 10.100.0.3
-  vrf_with_loopbacks_from_pod_pools:
-    ip_address: 10.101.102.3
+    vrf: vrf_with_loopbacks_from_pod_pools
 vxlan_interface:
   Vxlan1:
     description: DC1-POD2-LEAF1A_VTEP
     vxlan:
-      source_interface: Loopback1
       udp_port: 4789
+      source_interface: Loopback1
       vlans:
         110:
           vni: 10110
         111:
           vni: 50111
         112:
-          vni: 50112
+          vni: 10112
         2500:
           vni: 2500
         2600:
-          vni: 2600
+          vni: 12600
       vrfs:
         Common_VRF:
           vni: 1025
@@ -427,5 +450,10 @@ vxlan_interface:
           vni: 1100
         vrf_with_loopbacks_from_pod_pools:
           vni: 1101
+virtual_source_nat_vrfs:
+  vrf_with_loopbacks_from_overlapping_pool:
+    ip_address: 10.100.0.3
+  vrf_with_loopbacks_from_pod_pools:
+    ip_address: 10.101.102.3
 domain_list:
 - structured-config.set.under.vrf.common-vrf

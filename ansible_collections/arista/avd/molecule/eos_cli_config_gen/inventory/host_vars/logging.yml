@@ -1,12 +1,14 @@
 ### Logging ###
 logging:
-  console: error
+  console: errors
   buffered:
     size: 1000000
     level: warnings
   trap: disabled
   synchronous:
     level:
+  format:
+    timestamp: traditional year timezone
   source_interface:
   vrfs:
     mgt:
@@ -22,6 +24,10 @@ logging:
           ports:
             - 300
             - 400
+    vrf_with_no_source_interface:
+      hosts:
+        1.2.3.4:
+          protocol: udp
     default:
       source_interface: Loopback0
       hosts:

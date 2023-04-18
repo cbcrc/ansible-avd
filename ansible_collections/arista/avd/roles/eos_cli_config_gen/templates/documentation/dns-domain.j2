@@ -1,3 +1,4 @@
+{# doc - dns domain #}
 {% if dns_domain is defined and dns_domain is not none %}
 
 ## DNS Domain
@@ -7,7 +8,7 @@
 ### DNS Domain Device Configuration
 
 ```eos
-{% include 'eos/dns-domain.j2' %}
+{%     include 'eos/dns-domain.j2' %}
 !
 ```
 {% endif %}

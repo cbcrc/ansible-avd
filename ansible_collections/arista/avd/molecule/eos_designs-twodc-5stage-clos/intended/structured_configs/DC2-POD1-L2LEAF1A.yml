@@ -45,15 +45,16 @@ management_api_http:
   enable_vrfs:
     MGMT: {}
   enable_https: true
-eos_cli: "interface Loopback1011\n  description Loopback created from raw_eos_cli under l2leaf defaults in DC2 POD1\n\ninterface Loopback1111\n  description Loopback created from raw_eos_cli under platform_settings vEOS-LAB\n"
+eos_cli: "interface Loopback1011\n  description Loopback created from raw_eos_cli under l2leaf defaults in DC2 POD1\n\ninterface Loopback1111\n
+  \ description Loopback created from raw_eos_cli under platform_settings vEOS-LAB\n"
 ethernet_interfaces:
   Ethernet1:
     peer: DC2-POD1-LEAF1A
     peer_interface: Ethernet3
     peer_type: l3leaf
     description: DC2-POD1-LEAF1A_Ethernet3
-    type: switched
     shutdown: false
+    type: switched
     channel_group:
       id: 1
       mode: active
@@ -62,9 +63,9 @@ port_channel_interfaces:
     description: DC2-POD1-LEAF1A_Po3
     type: switched
     shutdown: false
-    vlans: 4092
     mode: trunk
     service_profile: QOS-PROFILE
+    vlans: '4092'
 ip_igmp_snooping:
   globally_enabled: true
 vlans:

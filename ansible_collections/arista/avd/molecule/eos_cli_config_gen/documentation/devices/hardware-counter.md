@@ -33,7 +33,7 @@
 
 | Management Interface | description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | -  | - |
+| Management1 | oob_management | oob | MGMT | - | - |
 
 ### Management Interfaces Device Configuration
 
@@ -58,6 +58,7 @@ interface Management1
 | Feature | Flow Direction |
 | ------- | -------------- |
 | ip | in |
+| ip | out |
 | gre | out |
 
 ### Hardware Counters Configuration
@@ -65,6 +66,7 @@ interface Management1
 ```eos
 !
 hardware counter feature ip in
+hardware counter feature ip out
 hardware counter feature gre out
 ```
 
@@ -88,7 +90,8 @@ hardware counter feature gre out
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false|
+| default | False |
+
 ### IP Routing Device Configuration
 
 ```eos
@@ -99,7 +102,7 @@ hardware counter feature gre out
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false |
+| default | False |
 
 # Multicast
 

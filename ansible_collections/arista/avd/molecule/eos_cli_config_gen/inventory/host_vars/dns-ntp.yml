@@ -3,6 +3,9 @@ ip_domain_lookup:
   source_interfaces:
     Management0:
       vrf: mgt
+    Loopback0:
+    # Note there is no value here. This is valid with the current data model, but triggered an issue with convert_dicts filter.
+    # So this is added to ensure we catch regression.
 
 ### Name Servers ###
 name_server:
@@ -26,3 +29,12 @@ ntp:
       vrf: mgt
     - name: 10.10.111.2
       vrf: mgt
+  authenticate_servers_only: true
+  authentication_keys:
+    - id: 1
+      hash_algorithm: "md5"
+      key: "044F0E151B"
+    - id: 2
+      hash_algorithm: "sha1"
+      key: "15060E1F10"
+  trusted_keys: "1-2"

@@ -15,6 +15,7 @@ vlan_interfaces:
     vrf: Tenant_B
     ip_address_virtual: 10.2.2.1/24
     no_autostate: true
+    isis_enable: "EVPN_UNDERLAY"
 
   Vlan81:
     description: IPv6 Virtual Address
@@ -22,6 +23,9 @@ vlan_interfaces:
     ip_address_virtual: 10.10.81.1/24
     ipv6_enable: true
     ipv6_address_virtual: fc00:10:10:81::1/64
+    ipv6_address_virtuals:
+      - fc00:10:11:81::1/64
+      - fc00:10:12:81::1/64
 
   Vlan83:
     description: SVI Description
@@ -45,6 +49,7 @@ vlan_interfaces:
     ip_address: 10.10.84.1/24
     arp_cache_dynamic_capacity: 50000
     bfd:
+      echo: true
       interval: 500
       min_rx: 500
       multiplier: 5
@@ -58,7 +63,6 @@ vlan_interfaces:
   Vlan87:
     description: SVI Description
     shutdown: true
-    ip_router_virtual_address: 10.10.87.254
     ip_address: 10.10.87.1/24
     access_group_in: ACL_IN
     access_group_out: ACL_OUT
@@ -78,8 +82,13 @@ vlan_interfaces:
   Vlan90:
     description: SVI Description
     ip_address: 10.10.83.1/24
-    ip_attached_host_route_export:
-      test: 10
+    ip_attached_host_route_export: {}
+
+  Vlan92:
+    description: SVI Description
+    ip_address: 10.10.92.1/24
+    ip_proxy_arp: true
+    ip_directed_broadcast: true
 
 # MCAST Configuration
 
@@ -90,6 +99,7 @@ vlan_interfaces:
     mtu: 9214
     pim:
       ipv4:
+        dr_priority: 200
         sparse_mode: true
 
 # Helpers on SVI
@@ -110,7 +120,7 @@ vlan_interfaces:
     description: SVI Description
     shutdown: false
     ip_address_virtual: 10.10.42.1/24
-    helpers:
+    ip_helpers:
       10.10.96.151:
         source_interface: Loopback0
       10.10.96.150:
@@ -153,6 +163,13 @@ vlan_interfaces:
         no_autoconfig_flag: true
     ipv6_virtual_router_address: 1b11:3a00:22b0:6::1
 
+  Vlan25:
+    description: SVI Description
+    shutdown: false
+    ipv6_address: 1b11:3a00:22b0:16::16/64
+    ipv6_virtual_router_addresses:
+      - 1b11:3a00:22b0:16::15
+      - 1b11:3a00:22b0:16::14
   Vlan1002:
     description: SVI Description
     shutdown: false
@@ -179,6 +196,17 @@ vlan_interfaces:
         preferred_lifetime: infinite
         no_autoconfig_flag: true
     ipv6_virtual_router_address: 1b11:3a00:22b0:1000::1
+    multicast:
+      ipv4:
+        static: true
+        boundaries:
+          - boundary: 224.0.1.0/24
+            out: true
+          - boundary: 224.0.2.0/24
+      ipv6:
+        boundaries:
+          - boundary: ff00::/16
+          - boundary: ff01::/16
 
 # IPv6 + helpers + Mcast
 
@@ -195,7 +223,7 @@ vlan_interfaces:
         preferred_lifetime: infinite
         no_autoconfig_flag: true
     ipv6_virtual_router_address: 1b11:3a00:22b0:5200::3
-    helpers:
+    ip_helpers:
       10.10.96.101:
         source_interface: Loopback0
       10.10.96.151:
@@ -208,6 +236,12 @@ vlan_interfaces:
       ipv4:
         source_route_export:
           enabled: true
+        boundaries:
+          - boundary: ACL_MULTICAST
+      ipv6:
+        static: true
+        boundaries:
+          - boundary: ACL_V6_MULTICAST_WITH_OUT
     pim:
       ipv4:
         sparse_mode: true
@@ -217,5 +251,87 @@ vlan_interfaces:
     description: PVLAN Primary with vlan mapping
     shutdown: false
     vrf: Tenant_A
-    ip address: 10.0.101.1/24
+    ip_address: 10.0.101.1/24
     pvlan_mapping: 111-112
+    multicast:
+      ipv4:
+        static: true
+        boundaries:
+          - boundary: ACL_MULTICAST
+            out: true
+      ipv6:
+        source_route_export:
+          enabled: true
+          administrative_distance: 20
+
+# VRRP
+  Vlan667:
+    description: Multiple VRIDs
+    shutdown: false
+    arp_aging_timeout: 180
+    ip_address: 192.0.2.2/25
+    ipv6_enable: true
+    ipv6_address: 2001:db8::2/64
+    ipv6_address_link_local: fe80::2/64
+    vrrp_ids:
+      - id: 1
+        priority_level: 105
+        advertisement:
+          interval: 2
+        preempt:
+          enabled: true
+          delay:
+            minimum: 30
+            reload: 800
+        ipv4:
+          address: 192.0.2.1
+      - id: 2
+        preempt:
+          enabled: true
+          delay:
+        ipv6:
+          address: 2001:db8::1
+
+  Vlan333:
+    description: Multiple VRIDs and tracking
+    shutdown: false
+    arp_aging_timeout: 180
+    ip_address: 192.0.2.2/25
+    ipv6_enable: true
+    ipv6_address: 2001:db8::2/64
+    ipv6_address_link_local: fe80::2/64
+    vrrp_ids:
+      - id: 1
+        priority_level: 105
+        advertisement:
+          interval: 2
+        preempt:
+          enabled: true
+          delay:
+            minimum: 30
+            reload: 800
+        ipv4:
+          address: 192.0.2.1
+        tracked_object:
+          - name: ID1-TrackedObjectDecrement
+            decrement: 5
+          - name: ID1-TrackedObjectShutdown
+            shutdown: true
+      - id: 2
+        preempt:
+          enabled: true
+          delay:
+        ipv6:
+          address: 2001:db8::1
+        tracked_object:
+          - name: ID2-TrackedObjectDecrement
+            decrement: 10
+          - name: ID2-TrackedObjectShutdown
+            shutdown: true
+      - id: 3
+        timers:
+          delay:
+            reload: 900
+        ipv4:
+          address: 100.64.0.1
+          version: 3

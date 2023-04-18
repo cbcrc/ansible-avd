@@ -36,7 +36,7 @@
 
 | Management Interface | description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | -  | - |
+| Management1 | oob_management | oob | MGMT | - | - |
 
 ### Management Interfaces Device Configuration
 
@@ -55,7 +55,6 @@ interface Management1
 ### DNS Domain Device Configuration
 
 ```eos
-!
 dns domain test.local
 !
 ```
@@ -82,12 +81,11 @@ ip name-server vrf mgt 10.10.129.10
 
 | Source interface | vrf |
 | ---------------- | --- |
-| Management0 | mgt  |
+| Management0 | mgt |
 
 ### DNS Domain Lookup Device Configuration
 
 ```eos
-!
 ip domain lookup vrf mgt source-interface Management0
 ```
 
@@ -141,7 +139,8 @@ ntp server vrf mgt 10.10.111.2
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false|
+| default | False |
+
 ### IP Routing Device Configuration
 
 ```eos
@@ -152,7 +151,7 @@ ntp server vrf mgt 10.10.111.2
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false |
+| default | False |
 
 # Multicast
 

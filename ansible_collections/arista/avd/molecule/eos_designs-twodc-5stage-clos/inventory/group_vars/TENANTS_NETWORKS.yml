@@ -1,10 +1,32 @@
 ---
+svi_profiles:
+  PARENT_PROFILE_STRUCT_CFG:
+    bgp:
+      structured_config:
+        redistribute_routes:
+          - router-mac system
+      raw_eos_cli: |
+        comment
+        comment created from raw_eos_cli under router bgp svis inherited from svi parent profile
+        EOF
+  TEST_PARENT_PROFILE_STRUCT_CFG:
+    parent_profile: PARENT_PROFILE_STRUCT_CFG
+  TEST_PROFILE_STRUCT_CFG:
+    bgp:
+      structured_config:
+        redistribute_routes:
+          - router-mac system
+      raw_eos_cli: |
+        comment
+        comment created from raw_eos_cli under router bgp svis inherited from svi profile
+        EOF
 # DC Tenants
 # Documentation of Tenant specific information - Vlans/VRFs
 tenants:
   # Tenant A Specific Information - VRFs / VLANs
   Tenant_A:
     mac_vrf_vni_base: 10000
+    mac_vrf_id_base: 20000
     enable_mlag_ibgp_peering_vrfs: false
     vrfs:
       Common_VRF:
@@ -14,24 +36,35 @@ tenants:
             name: Tenant_A_OP_Zone_1
             tags: [opzone]
             enabled: true
+            rt_override: 99110 # RT would have been 20000 + 110.
             ip_address_virtual: 10.1.10.1/24
+            profile: TEST_PROFILE_STRUCT_CFG
             structured_config:
               description: set from structured_config on svi (was Tenant_A_OP_Zone_1)
             nodes:
-              DC1-POD1-LEAF2A:
+              DC1.POD1.LEAF2A:
                 structured_config:
-                  description: set from structured_config on svi for DC1-POD1-LEAF2A (was Tenant_A_OP_Zone_1)
+                  description: set from structured_config on svi for DC1.POD1.LEAF2A (was Tenant_A_OP_Zone_1)
           "111":
             vni_override: 50111
             name: Tenant_A_OP_Zone_2
             tags: [opzone]
             ip_address_virtual: 10.1.11.1/24
+            bgp:
+              structured_config:
+                # Will be merged with 'redistribute routes learned'
+                redistribute_routes:
+                  - router-mac system
+              raw_eos_cli: |
+                comment
+                comment created from raw_eos_cli under router bgp svi 111
+                EOF
           "112":
-            vni_override: 50112
             name: Tenant_A_OP_Zone_3
             tags: [opzone]
             enabled: true
             ip_address_virtual: 10.1.12.1/24
+            profile: TEST_PARENT_PROFILE_STRUCT_CFG
             nodes:
               DC1-POD1-LEAF1A:
                 raw_eos_cli: |
@@ -114,9 +147,17 @@ tenants:
         name: web-l2-vlan
         tags: [web]
       "2600":
-        vni_override: 2600
+        rt_override: 32600
         name: web-l2-vlan-2
         tags: [web]
+        bgp:
+          structured_config:
+            redistribute_routes:
+              - router-mac system
+          raw_eos_cli: |
+            comment
+            comment created from raw_eos_cli under router bgp l2vlan 2600
+            EOF
       2601:
         name: l2vlan_with_no_vxlan
         tags: [web]

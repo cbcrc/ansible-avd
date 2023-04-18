@@ -18,15 +18,16 @@
 # {% if C is arista.avd.defined("c") %}  =>  true
 # {% if D is arista.avd.defined("c") %}  =>  false
 
-from __future__ import (absolute_import, division, print_function)
+from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
-from jinja2.runtime import Undefined
-from ansible.utils.display import Display
 from ansible.errors import AnsibleError
+from ansible.utils.display import Display
+from jinja2.runtime import Undefined
 
 
-def defined(value, test_value=None, var_type=None, fail_action=None, var_name=None):
+def defined(value, test_value=None, var_type=None, fail_action=None, var_name=None, run_tests=False):
     """
     defined - Ansible test plugin to test if a variable is defined and not none
 
@@ -57,7 +58,7 @@ def defined(value, test_value=None, var_type=None, fail_action=None, var_name=No
         Value to test from ansible
     test_value : any, optional
         Value to test in addition of defined and not none, by default None
-    var_type : ['float', 'int', 'str', 'list', 'dict', 'tuple'], optional
+    var_type : ['float', 'int', 'str', 'list', 'dict', 'tuple', 'bool'], optional
         Type or Class to test for
     fail_action : ['warning', 'error'], optional
         Optional action if test fails to emit a Warning or Error
@@ -69,48 +70,55 @@ def defined(value, test_value=None, var_type=None, fail_action=None, var_name=No
     boolean
         True if variable matches criteria, False in other cases.
     """
+    display = Display()
     if isinstance(value, Undefined) or value is None:
         # Invalid value - return false
-        if str(fail_action).lower() == 'warning':
+        if str(fail_action).lower() == "warning":
+            display._warns = {}
             if var_name is not None:
-                Display().warning(f"{var_name} was expected but not set. Output may be incorrect or incomplete!")
+                display.warning(f"{var_name} was expected but not set. Output may be incorrect or incomplete!")
             else:
-                Display().warning("A variable was expected but not set. Output may be incorrect or incomplete!")
-        elif str(fail_action).lower() == 'error':
+                display.warning("A variable was expected but not set. Output may be incorrect or incomplete!")
+        elif str(fail_action).lower() == "error":
             if var_name is not None:
                 raise AnsibleError(f"{var_name} was expected but not set!")
             else:
                 raise AnsibleError("A variable was expected but not set!")
+        if run_tests:
+            return False, display._warns
         return False
+
     elif test_value is not None and value != test_value:
         # Valid value but not matching the optional argument
-        if str(fail_action).lower() == 'warning':
+        if str(fail_action).lower() == "warning":
+            display._warns = {}
             if var_name is not None:
-                Display().warning(f"{var_name} was set to {value} but we expected {test_value}. Output may be incorrect or incomplete!")
+                display.warning(f"{var_name} was set to {value} but we expected {test_value}. Output may be incorrect or incomplete!")
             else:
-                Display().warning(f"A variable was set to {value} but we expected {test_value}. Output may be incorrect or incomplete!")
-        elif str(fail_action).lower() == 'error':
+                display.warning(f"A variable was set to {value} but we expected {test_value}. Output may be incorrect or incomplete!")
+        elif str(fail_action).lower() == "error":
             if var_name is not None:
                 raise AnsibleError(f"{var_name} was set to {value} but we expected {test_value}!")
             else:
                 raise AnsibleError(f"A variable was set to {value} but we expected {test_value}!")
+        if run_tests:
+            return False, display._warns
         return False
-    elif str(var_type).lower() in ['float', 'int', 'str', 'list', 'dict', 'tuple'] and str(var_type).lower() != type(value).__name__:
+    elif str(var_type).lower() in ["float", "int", "str", "list", "dict", "tuple", "bool"] and str(var_type).lower() != type(value).__name__:
         # Invalid class - return false
-        if str(fail_action).lower() == 'warning':
+        if str(fail_action).lower() == "warning":
+            display._warns = {}
             if var_name is not None:
-                Display().warning(
-                    f"{var_name} was a {type(value).__name__} but we expected a {str(var_type).lower()}. Output may be incorrect or incomplete!"
-                )
+                display.warning(f"{var_name} was a {type(value).__name__} but we expected a {str(var_type).lower()}. Output may be incorrect or incomplete!")
             else:
-                Display().warning(
-                    f"A variable was a {type(value).__name__} but we expected a {str(var_type).lower()}. Output may be incorrect or incomplete!"
-                )
-        elif str(fail_action).lower() == 'error':
+                display.warning(f"A variable was a {type(value).__name__} but we expected a {str(var_type).lower()}. Output may be incorrect or incomplete!")
+        elif str(fail_action).lower() == "error":
             if var_name is not None:
                 raise AnsibleError(f"{var_name} was a {type(value).__name__} but we expected a {str(var_type).lower()}!")
             else:
                 raise AnsibleError(f"A variable was a {type(value).__name__} but we expected a {str(var_type).lower()}!")
+        if run_tests:
+            return False, display._warns
         return False
     else:
         # Valid value and is matching optional argument if provided - return true
@@ -120,5 +128,5 @@ def defined(value, test_value=None, var_type=None, fail_action=None, var_name=No
 class TestModule(object):
     def tests(self):
         return {
-            'defined': defined,
+            "defined": defined,
         }

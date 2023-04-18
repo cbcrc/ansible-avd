@@ -1,36 +1,24 @@
-{# Management API MODELS #}
-{% if management_api_models is defined and management_api_models is not none %}
+{# doc - management api models #}
+{% if management_api_models is arista.avd.defined %}
 
-## Management API models
+## Management API Models
 
-### Management API models configuration
+### Management API Models Summary
 
+| Provider | Path | Disabled |
+| -------- | ---- | ------- |
 {%     if management_api_models.providers is arista.avd.defined %}
-
-| PROVIDER | PATH | IPv4 Unicast | IPv6 Unicast |
-| -------- | ---- | ------------ | ------------ |
-{%         for provider in management_api_models.providers | arista.avd.natural_sort %}
-{%             if management_api_models.providers[provider].ipv4_unicast is true %}
-{%                 set ipv4_u = "Enabled" %}
-{%             else %}
-{%                 set ipv4_u = "-" %}
-{%             endif %}
-{%             if management_api_models.providers[provider].ipv6_unicast is true %}
-{%                 set ipv6_u = "Enabled" %}
-{%             else %}
-{%                 set ipv6_u = "-" %}
-{%             endif %}
-{%             if management_api_models.providers[provider].paths is defined %}
-{%                 for path in management_api_models.providers[provider].paths | arista.avd.natural_sort %}
-| {{ provider }} | {{ path }} | {{ ipv4_u }} | {{ ipv6_u }} |
+{%         for provider in management_api_models.providers | arista.avd.natural_sort('name') %}
+{%             if provider.paths is arista.avd.defined and provider.name | lower in ['smash', 'sysdb'] %}
+{%                 for path in provider.paths | arista.avd.natural_sort('path') %}
+{%                     set disabled = path.disabled | arista.avd.default(false) %}
+| {{ provider.name }} | {{ path.path }} | {{ disabled }} |
 {%                 endfor %}
-{%             else %}
-| {{ provider }} | "-" | {{ ipv4_u }} | {{ ipv6_u }} |
 {%             endif %}
 {%         endfor %}
 {%     endif %}
 
-### Management API models configuration
+### Management API Models Configuration
 
 ```eos
 {%     include 'eos/management-api-models.j2' %}

@@ -36,7 +36,7 @@
 
 | Management Interface | description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | -  | - |
+| Management1 | oob_management | oob | MGMT | - | - |
 
 ### Management Interfaces Device Configuration
 
@@ -55,7 +55,6 @@ interface Management1
 ### DNS Domain Device Configuration
 
 ```eos
-!
 dns domain test.local
 !
 ```
@@ -82,12 +81,13 @@ ip name-server vrf mgt 10.10.129.10
 
 | Source interface | vrf |
 | ---------------- | --- |
-| Management0 | mgt  |
+| Loopback0 | - |
+| Management0 | mgt |
 
 ### DNS Domain Lookup Device Configuration
 
 ```eos
-!
+ip domain lookup source-interface Loopback0
 ip domain lookup vrf mgt source-interface Management0
 ```
 
@@ -108,10 +108,27 @@ ip domain lookup vrf mgt source-interface Management0
 | 10.10.111.1 | mgt | True | - | - | - | - | - | - | - |
 | 10.10.111.2 | mgt | - | - | - | - | - | - | - | - |
 
+#### NTP Authentication
+
+- Authentication enabled (Servers only)
+
+- Trusted Keys: 1-2
+
+#### NTP Authentication Keys
+
+| ID | Algorithm |
+| -- | -------- |
+| 1 | md5 |
+| 2 | sha1 |
+
 ### NTP Device Configuration
 
 ```eos
 !
+ntp authentication-key 1 md5 044F0E151B
+ntp authentication-key 2 sha1 15060E1F10
+ntp trusted-key 1-2
+ntp authenticate servers
 ntp local-interface vrf mgt Management0
 ntp server vrf mgt 10.10.111.1 prefer
 ntp server vrf mgt 10.10.111.2
@@ -141,7 +158,8 @@ ntp server vrf mgt 10.10.111.2
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false|
+| default | False |
+
 ### IP Routing Device Configuration
 
 ```eos
@@ -152,7 +170,7 @@ ntp server vrf mgt 10.10.111.2
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false |
+| default | False |
 
 # Multicast
 

@@ -27,7 +27,7 @@ name_server:
   - 8.8.8.8
 snmp_server:
   contact: example@example.com
-  location: DC1_FABRIC rackE DC1-L2LEAF3A
+  location: EOS_DESIGNS_UNIT_TESTS rackE DC1-L2LEAF3A
 spanning_tree:
   mode: mstp
   mst_instances:
@@ -35,13 +35,13 @@ spanning_tree:
       priority: 16384
 local_users:
   admin:
-    privilege: 15
-    role: network-admin
-    no_password: true
+    disabled: true
   cvpadmin:
     privilege: 15
     role: network-admin
     sha512_password: $6$rZKcbIZ7iWGAWTUM$TCgDn1KcavS0s.OV8lacMTUkxTByfzcGlFlYUWroxYuU7M/9bIodhRO7nXGzMweUxvbk8mJmQl8Bh44cRktUj.
+    ssh_key: ssh-rsa AAAAB3NzaC1yc2EAA82spi2mkxp4FgaLi4CjWkpnL1A/MD7WhrSNgqXToF7QCb9Lidagy9IHafQxfu7LwkFdyQIMu8XNwDZIycuf29wHbDdz1N+YNVK8zwyNAbMOeKMqblsEm2YIorgjzQX1m9+/rJeFBKz77PSgeMp/Rc3txFVuSmFmeTy3aMkU=
+      cvpadmin@hostmachine.local
 vrfs:
   MGMT:
     ip_routing: false
@@ -57,14 +57,15 @@ management_api_http:
   enable_vrfs:
     MGMT: {}
   enable_https: true
+  default_services: false
 ethernet_interfaces:
   Ethernet1:
     peer: DC1-LEAF2A
     peer_interface: Ethernet9
     peer_type: l3leaf
     description: DC1-LEAF2A_Ethernet9
-    type: switched
     shutdown: false
+    type: switched
     channel_group:
       id: 1
       mode: active
@@ -73,8 +74,8 @@ ethernet_interfaces:
     peer_interface: Ethernet9
     peer_type: l3leaf
     description: DC1-LEAF2B_Ethernet9
-    type: switched
     shutdown: false
+    type: switched
     channel_group:
       id: 1
       mode: active
@@ -83,8 +84,8 @@ port_channel_interfaces:
     description: DC1_LEAF2_Po9
     type: switched
     shutdown: false
-    vlans: 110-111,120-121,130-131,160-161
     mode: trunk
+    vlans: 110-112,120-121,130-131,160-161
 vlans:
   130:
     tenant: Tenant_A
@@ -98,6 +99,9 @@ vlans:
   111:
     tenant: Tenant_A
     name: Tenant_A_OP_Zone_2
+  112:
+    tenant: Tenant_A
+    name: Tenant_A_OP_Zone_3
   120:
     tenant: Tenant_A
     name: Tenant_A_WEB_Zone_1

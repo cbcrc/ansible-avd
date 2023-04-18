@@ -1,4 +1,4 @@
-{# Management API GNMI #}
+{# doc - management api gnmi #}
 {% if management_api_gnmi is defined and management_api_gnmi is not none %}
 
 ## Management API GNMI
@@ -15,23 +15,23 @@
 | VRF with GNMI | OCTA |
 | ------------- | ---- |
 {%         for vrf in management_api_gnmi.enable_vrfs | arista.avd.natural_sort %}
-| {{ vrf }} | {{ octa }} |
+| {{ vrf.name }} | {{ octa }} |
 {%         endfor %}
 {%     endif %}
 {# new table view using the new flags #}
 {%     if management_api_gnmi.transport is arista.avd.defined %}
 
-| Transport | VRF | PORT | Notification Timestamp | ACL |
-| --------- | --- | ---- | ---------------------- | --- |
+| Transport | SSL Profile | VRF | Notification Timestamp | ACL |
+| --------- | ----------- | --- | ---------------------- | --- |
 {%         if management_api_gnmi.transport.grpc is arista.avd.defined %}
 {%             for transport in management_api_gnmi.transport.grpc %}
 {%                 if transport.name is arista.avd.defined %}
 {%                     set transport_name = transport.name %}
+{%                     set ssl_profile = transport.ssl_profile | arista.avd.default('-') %}
 {%                     set vrf = transport.vrf | arista.avd.default('-') %}
-{%                     set port = transport.port | arista.avd.default('-') %}
 {%                     set notif = transport.notification_timestamp | arista.avd.default('last-change-time') %}
 {%                     set acl = transport.ip_access_group | arista.avd.default('-') %}
-| {{ transport_name }} | {{ vrf }} | {{ port }} | {{ notif }} | {{ acl }} |
+| {{ transport_name }} | {{ ssl_profile }} | {{ vrf }} | {{ notif }} | {{ acl }} |
 {%                 endif %}
 {%             endfor %}
 {%         endif %}

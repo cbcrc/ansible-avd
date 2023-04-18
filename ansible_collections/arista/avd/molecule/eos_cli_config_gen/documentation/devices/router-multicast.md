@@ -33,7 +33,7 @@
 
 | Management Interface | description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | -  | - |
+| Management1 | oob_management | oob | MGMT | - | - |
 
 ### Management Interfaces Device Configuration
 
@@ -69,7 +69,8 @@ interface Management1
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false|
+| default | False |
+
 ### IP Routing Device Configuration
 
 ```eos
@@ -80,7 +81,7 @@ interface Management1
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false |
+| default | False |
 
 # Multicast
 
@@ -88,9 +89,18 @@ interface Management1
 
 ### IP Router Multicast Summary
 
+- Counters rate period decay is set for 300 seconds
 - Routing for IPv4 multicast is enabled.
 - Multipathing deterministically by selecting the same upstream router.
 - Software forwarding by the Software Forwarding Engine (SFE)
+
+### IP Router Multicast RPF Routes
+
+| Source Prefix | Next Hop | Administrative Distance |
+| ------------- | -------- | ----------------------- |
+| 10.10.10.1/32 | 10.9.9.9 | 2 |
+| 10.10.10.1/32 | Ethernet1 | 1 |
+| 10.10.10.2/32 | Ethernet2 | - |
 
 ### IP Router Multicast VRFs
 
@@ -105,17 +115,21 @@ interface Management1
 !
 router multicast
    ipv4
+      rpf route 10.10.10.1/32 10.9.9.9 2
+      rpf route 10.10.10.1/32 Ethernet1 1
+      rpf route 10.10.10.2/32 Ethernet2
+      counters rate period decay 300 seconds
       routing
       multipath deterministic router-id
       software-forwarding sfe
-      !
-      vrf MCAST_VRF1
-         ipv4
-            routing
-      !
-      vrf MCAST_VRF2
-         ipv4
-            routing
+   !
+   vrf MCAST_VRF1
+      ipv4
+         routing
+   !
+   vrf MCAST_VRF2
+      ipv4
+         routing
 ```
 
 

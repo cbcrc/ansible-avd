@@ -16,9 +16,9 @@ router_bgp:
       type: evpn
       update_source: Loopback0
       bfd: true
-      ebgp_multihop: '5'
       send_community: all
       maximum_routes: 0
+      ebgp_multihop: 5
       next_hop_unchanged: true
   address_family_ipv4:
     peer_groups:
@@ -42,6 +42,10 @@ router_bgp:
       peer_group: IPv4-UNDERLAY-PEERS
       remote_as: '65211'
       description: DC2-POD1-LEAF1A_Ethernet1
+    172.17.210.5:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65212'
+      description: DC2-POD1-LEAF2A_Ethernet1
     172.16.110.3:
       peer_group: EVPN-OVERLAY-PEERS
       description: DC1-POD1-LEAF1A
@@ -107,44 +111,57 @@ management_api_http:
   enable_vrfs:
     MGMT: {}
   enable_https: true
-eos_cli: "interface Loopback1009\n  description Loopback created from raw_eos_cli under spine defaults in DC2 POD1\n\ninterface Loopback1111\n  description Loopback created from raw_eos_cli under platform_settings vEOS-LAB\n"
+eos_cli: "interface Loopback1009\n  description Loopback created from raw_eos_cli under spine defaults in DC2 POD1\n\ninterface Loopback1111\n
+  \ description Loopback created from raw_eos_cli under platform_settings vEOS-LAB\n"
 ethernet_interfaces:
   Ethernet1:
     peer: DC2-SUPER-SPINE1
     peer_interface: Ethernet1
     peer_type: super-spine
     description: P2P_LINK_TO_DC2-SUPER-SPINE1_Ethernet1
+    shutdown: false
     mtu: 1500
     service_profile: QOS-PROFILE
+    type: routed
     ptp:
       enable: true
-    type: routed
-    shutdown: false
     ip_address: 172.16.21.1/31
   Ethernet2:
     peer: DC2-SUPER-SPINE2
     peer_interface: Ethernet1
     peer_type: super-spine
     description: P2P_LINK_TO_DC2-SUPER-SPINE2_Ethernet1
+    shutdown: false
     mtu: 1500
     service_profile: QOS-PROFILE
+    type: routed
     ptp:
       enable: true
-    type: routed
-    shutdown: false
     ip_address: 172.16.21.65/31
   Ethernet3:
     peer: DC2-POD1-LEAF1A
     peer_interface: Ethernet1
     peer_type: l3leaf
     description: P2P_LINK_TO_DC2-POD1-LEAF1A_Ethernet1
+    shutdown: false
     mtu: 1500
     service_profile: QOS-PROFILE
+    type: routed
     ptp:
       enable: true
-    type: routed
-    shutdown: false
     ip_address: 172.17.210.0/31
+  Ethernet4:
+    peer: DC2-POD1-LEAF2A
+    peer_interface: Ethernet1
+    peer_type: l3leaf
+    description: P2P_LINK_TO_DC2-POD1-LEAF2A_Ethernet1
+    shutdown: false
+    mtu: 1500
+    service_profile: QOS-PROFILE
+    type: routed
+    ptp:
+      enable: true
+    ip_address: 172.17.210.4/31
   Ethernet5:
     peer: DC1-POD2-SPINE1
     peer_interface: Ethernet5

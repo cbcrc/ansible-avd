@@ -8,6 +8,14 @@ vxlan_interface:
       mlag_source_interface: Loopback1
       udp_port: 4789
       virtual_router_encapsulation_mac_address: mlag-system-id
+      qos:
+        dscp_propagation_encapsulation: true
+        map_dscp_to_traffic_class_decapsulation: true
+      bfd_vtep_evpn:
+        interval: 300
+        min_rx: 300
+        multiplier: 3
+        prefix_list: PL-TEST
       vlans:
         110:
           vni: 10110
@@ -17,6 +25,8 @@ vxlan_interface:
           flood_vteps:
             - 10.1.1.10
             - 10.1.1.11
+        112:
+          multicast_group: 239.9.1.6
       vrfs:
         Tenant_A_OP_Zone:
           vni: 10

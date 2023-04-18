@@ -33,7 +33,7 @@
 
 | Management Interface | description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | -  | - |
+| Management1 | oob_management | oob | MGMT | - | - |
 
 ### Management Interfaces Device Configuration
 
@@ -70,22 +70,24 @@ interface Management1
 
 - Authentication enabled
 
-- Trusted Keys: 1-2
+- Trusted Keys: 1-3
 
 #### NTP Authentication Keys
 
-| ID | Algoritm |
+| ID | Algorithm |
 | -- | -------- |
 | 1 | md5 |
-| 2 | sha1 |
+| 2 | md5 |
+| 3 | sha1 |
 
 ### NTP Device Configuration
 
 ```eos
 !
-ntp authentication-key 1 md5 044F0E151B
-ntp authentication-key 2 sha1 15060E1F10
-ntp trusted-key 1-2
+ntp authentication-key 1 md5 7 044F0E151B
+ntp authentication-key 2 md5 7 044F0E151B
+ntp authentication-key 3 sha1 8a $BYk2Sjahe+D9T7uDgIItSA==$JTw5JOAPcYEo0O2hsvsxFQ==$C7wmpXOo
+ntp trusted-key 1-3
 ntp authenticate
 ntp local-interface lo1
 ntp server 1.2.3.4 local-interface lo0
@@ -120,7 +122,8 @@ ntp server ie.pool.ntp.org iburst key 1
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false|
+| default | False |
+
 ### IP Routing Device Configuration
 
 ```eos
@@ -131,7 +134,7 @@ ntp server ie.pool.ntp.org iburst key 1
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false |
+| default | False |
 
 # Multicast
 

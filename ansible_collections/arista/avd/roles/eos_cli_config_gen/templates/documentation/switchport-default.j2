@@ -1,3 +1,4 @@
+{# doc - switchport default #}
 {% if switchport_default is arista.avd.defined %}
 
 ## Switchport Default
@@ -20,6 +21,6 @@
 ### Switchport Default Configuration
 
 ```eos
-{% include 'eos/switchport-default.j2' %}
+{%     include 'eos/switchport-default.j2' %}
 ```
 {% endif %}

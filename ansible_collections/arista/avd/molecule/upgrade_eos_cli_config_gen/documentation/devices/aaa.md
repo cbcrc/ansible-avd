@@ -39,7 +39,7 @@
 
 | Management Interface | description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | -  | - |
+| Management1 | oob_management | oob | MGMT | - | - |
 
 ### Management Interfaces Device Configuration
 
@@ -57,11 +57,11 @@ interface Management1
 
 ### Local Users Summary
 
-| User | Privilege | Role |
-| ---- | --------- | ---- |
-| admin | 15 | network-admin |
-| ansible | 15 | network-admin |
-| cvpadmin | 15 | network-admin |
+| User | Privilege | Role | Disabled |
+| ---- | --------- | ---- | -------- |
+| admin | 15 | network-admin | False |
+| ansible | 15 | network-admin | False |
+| cvpadmin | 15 | network-admin | False |
 
 ### Local Users Device Configuration
 
@@ -79,9 +79,9 @@ username cvpadmin ssh-key ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC9OuVC4D+ARBrc9s
 
 | VRF | TACACS Servers | Single-Connection |
 | --- | -------------- | ----------------- |
-|  mgt | 10.10.10.157 | True |
-|  default | 10.10.10.249 | False |
-|  default | 10.10.10.158 | False |
+| mgt | 10.10.10.157 | True |
+| default | 10.10.10.249 | False |
+| default | 10.10.10.158 | False |
 
 ### TACACS Servers Device Configuration
 
@@ -98,9 +98,9 @@ tacacs-server host 10.10.10.249 timeout 23 key 7 071B245F5A
 
 | VRF | RADIUS Servers |
 | --- | ---------------|
-|  mgt | 10.10.10.157 |
-|  default | 10.10.10.249 |
-|  default | 10.10.10.158 |
+| mgt | 10.10.10.157 |
+| default | 10.10.10.249 |
+| default | 10.10.10.158 |
 
 ### RADIUS Servers Device Configuration
 
@@ -108,7 +108,7 @@ tacacs-server host 10.10.10.249 timeout 23 key 7 071B245F5A
 !
 radius-server host 10.10.10.157 vrf mgt key 7 071B245F5A
 radius-server host 10.10.10.249 key 7 071B245F5A
-radius-server host 10.10.10.158 vrf default key 7 071B245F5A
+radius-server host 10.10.10.158 key 7 071B245F5A
 ```
 
 ## AAA Server Groups
@@ -117,8 +117,8 @@ radius-server host 10.10.10.158 vrf default key 7 071B245F5A
 
 | Server Group Name | Type  | VRF | IP address |
 | ------------------| ----- | --- | ---------- |
-| TACACS | tacacs+ |  mgt | 10.10.10.157 |
-| TACACS | tacacs+ |  default | 10.10.10.249 |
+| TACACS | tacacs+ | mgt | 10.10.10.157 |
+| TACACS | tacacs+ | default | 10.10.10.249 |
 
 ### AAA Server Groups Device Configuration
 
@@ -147,7 +147,6 @@ Policy local allow-nopassword-remote-login has been enabled.
 ### AAA Authentication Device Configuration
 
 ```eos
-!
 aaa authentication login default group TACACS local
 aaa authentication login console local
 aaa authentication enable default group TACACS local
@@ -170,12 +169,17 @@ Authorization for configuration commands is enabled.
 
 Authorization for serial console is enabled.
 
+### AAA Authorization Privilege Levels Summary
+
+| Privilege Level | User Stores |
+| --------------- | ----------- |
+| all | group aaaAuth |
+
 ### AAA Authorization Device Configuration
 
 ```eos
-!
-aaa authorization exec default group CUST local
 aaa authorization serial-console
+aaa authorization exec default group CUST local
 aaa authorization commands all default group aaaAuth
 !
 ```
@@ -193,7 +197,6 @@ aaa authorization commands all default group aaaAuth
 ### AAA Accounting Device Configuration
 
 ```eos
-!
 aaa accounting exec default start-stop group TACACS
 aaa accounting commands all default start-stop group TACACS logging
 aaa accounting commands 0 default start-stop logging
@@ -221,7 +224,8 @@ aaa accounting commands 0 default start-stop logging
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false|
+| default | False |
+
 ### IP Routing Device Configuration
 
 ```eos
@@ -232,7 +236,7 @@ aaa accounting commands 0 default start-stop logging
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false |
+| default | False |
 
 # Multicast
 

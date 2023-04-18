@@ -1,6 +1,4 @@
-# GNU General Public License v3.0+
-#
-# Copyright 2021 Arista Networks AS-EMEA
+# Copyright 2021 Arista Networks
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,7 +13,7 @@
 # limitations under the License.
 #
 
-DOCUMENTATION = r'''
+DOCUMENTATION = r"""
 ---
 module: yaml_templates_to_facts
 version_added: "1.0.0"
@@ -35,33 +33,66 @@ options:
     elements: dict
     suboptions:
       template:
-        description: Template file
-        required: true
+        description: |
+          Template file.
+          Either template or python_module must be set.
+        required: false
         type: str
+      python_module:
+        description: |
+          Python module to import
+          Either template or python_module must be set.
+        required: false
+        type: str
+      python_class_name:
+        description: |
+          Name of Python Class to import
+        required: false
+        type: str
+        default: "AvdStructuredConfig"
       options:
         description: Template options
         required: false
         type: dict
         suboptions:
           list_merge:
-            description: Merge strategy for lists for Ansible Combine filter
+            description: Merge strategy for lists
             required: false
             default: 'append'
             type: str
           strip_empty_keys:
-            description: "Filter out keys from the generated output if value is null/none/undefined"
+            description: |
+              Filter out keys from the generated output if value is null/none/undefined
+              Only applies to templates.
             required: false
             default: true
             type: bool
-'''
+  debug:
+    description: Output list 'avd_yaml_templates_to_facts_debug' with timestamps of each performed action.
+    required: false
+    type: bool
+  dest:
+    description: |
+      Destination path. If set, the output facts will also be written to this path.
+      Autodetects data format based on file suffix. '.yml', '.yaml' -> YAML, default -> JSON
+    required: false
+    type: str
+  template_output:
+    description: |
+      If true the output data will be run through another jinja2 rendering before returning.
+      This is to resolve any input values with inline jinja using variables/facts set by the input templates.
+    required: false
+    type: bool
+"""
 
-EXAMPLES = r'''
+EXAMPLES = r"""
 # tasks file for configlet_build_config
 - name: Generate device configuration in structured format
   yaml_templates_to_facts:
     root_key: structured_config
     templates:
-      - template: "base/main.j2"
+      - python_module: "ansible_collections.arista.avd.roles.eos_designs.python_modules.base"
+        python_class_name: "AvdStructuredConfig"
       - template: "mlag/main.j2"
       - template: "designs/underlay/main.j2"
       - template: "designs/overlay/main.j2"
@@ -74,4 +105,4 @@ EXAMPLES = r'''
           strip_empty_keys: false
   check_mode: no
   changed_when: False
-'''
+"""

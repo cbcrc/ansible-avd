@@ -3,7 +3,6 @@ static_routes:
   destination_address_prefix: 0.0.0.0/0
   gateway: 192.168.200.5
 service_routing_protocols_model: multi-agent
-ip_routing: true
 ipv6_unicast_routing: true
 ip_routing_ipv6_interfaces: true
 daemon_terminattr:
@@ -62,8 +61,8 @@ ethernet_interfaces:
     peer_interface: Ethernet7
     peer_type: l3leaf
     description: DC1-LEAF2A_Ethernet7
-    type: switched
     shutdown: false
+    type: switched
     channel_group:
       id: 1
       mode: active
@@ -72,8 +71,8 @@ ethernet_interfaces:
     peer_interface: Ethernet7
     peer_type: l3leaf
     description: DC1-LEAF2B_Ethernet7
-    type: switched
     shutdown: false
+    type: switched
     channel_group:
       id: 1
       mode: active
@@ -82,8 +81,8 @@ port_channel_interfaces:
     description: DC1_LEAF2_Po7
     type: switched
     shutdown: false
-    vlans: 110-111,120-121,130-131,160-161
     mode: trunk
+    vlans: 110-111,120-121,130-131,160-161
 vlans:
   130:
     tenant: Tenant_A

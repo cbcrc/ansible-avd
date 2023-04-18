@@ -34,7 +34,7 @@
 
 | Management Interface | description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | -  | - |
+| Management1 | oob_management | oob | MGMT | - | - |
 
 ### Management Interfaces Device Configuration
 
@@ -50,9 +50,9 @@ interface Management1
 
 ### Management API HTTP Summary
 
-| HTTP | HTTPS |
-| ---- | ----- |
-| False | True |
+| HTTP | HTTPS | Default Services |
+| ---- | ----- | ---------------- |
+| False | True | True |
 
 Management HTTPS is using the SSL profile SSL_PROFILE
 
@@ -71,6 +71,7 @@ management api http-commands
    protocol https
    protocol https ssl profile SSL_PROFILE
    no protocol http
+   default-services
    no shutdown
    !
    vrf default
@@ -106,7 +107,8 @@ management api http-commands
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false|
+| default | False |
+
 ### IP Routing Device Configuration
 
 ```eos
@@ -117,7 +119,7 @@ management api http-commands
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false |
+| default | False |
 
 # Multicast
 

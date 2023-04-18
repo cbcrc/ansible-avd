@@ -1,9 +1,13 @@
+{# doc - router multicast #}
 {% if router_multicast is arista.avd.defined %}
 
 ## Router Multicast
 
 ### IP Router Multicast Summary
 
+{%     if router_multicast.ipv4.counters.rate_period_decay is arista.avd.defined %}
+- Counters rate period decay is set for {{ router_multicast.ipv4.counters.rate_period_decay }} seconds
+{%     endif %}
 {%     if router_multicast.ipv4.routing is arista.avd.defined(true) %}
 - Routing for IPv4 multicast is enabled.
 {%     endif %}
@@ -20,6 +24,18 @@
 - Software forwarding by the Linux kernel
 {%     elif router_multicast.ipv4.software_forwarding is arista.avd.defined('sfe') %}
 - Software forwarding by the Software Forwarding Engine (SFE)
+{%     endif %}
+{%     if router_multicast.ipv4.rpf.routes is arista.avd.defined %}
+
+### IP Router Multicast RPF Routes
+
+| Source Prefix | Next Hop | Administrative Distance |
+| ------------- | -------- | ----------------------- |
+{%         for rpf_route in router_multicast.ipv4.rpf.routes | arista.avd.natural_sort('source_prefix') if rpf_route.source_prefix is arista.avd.defined %}
+{%             for destination in rpf_route.destinations | arista.avd.natural_sort('nexthop') if destination.nexthop is arista.avd.defined %}
+| {{ rpf_route.source_prefix }} | {{ destination.nexthop }} | {{ destination.distance | arista.avd.default('-') }} |
+{%             endfor %}
+{%         endfor %}
 {%     endif %}
 {%     if router_multicast.vrfs is arista.avd.defined %}
 
@@ -40,7 +56,7 @@
 ### Router Multicast Device Configuration
 
 ```eos
-{% include 'eos/router-multicast.j2' %}
+{%     include 'eos/router-multicast.j2' %}
 ```
 
 {% endif %}

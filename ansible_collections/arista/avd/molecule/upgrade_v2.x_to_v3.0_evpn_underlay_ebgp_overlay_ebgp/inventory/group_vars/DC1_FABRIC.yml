@@ -39,12 +39,12 @@ evpn_short_esi_prefix: "0000:1234:"
 bgp_peer_groups:
   IPv4_UNDERLAY_PEERS:
     name: UNDERLAY-PEERS
-    password: "AQQvKeimxJu+uGQ/yYvv9w=="
+    password: "0nsCUm70mvSTxVO0ldytrg=="
   EVPN_OVERLAY_PEERS:
     password: "q+VNViP5i4rVjW1cxFv2wA=="
   MLAG_IPv4_UNDERLAY_PEER:
     name: MLAG-PEERS
-    password: "vnEaG8gMeQf3d3cN6PktXQ=="
+    password: "15AwQNBEJ1nyF/kBEtoAGw=="
 
 # Spine Switches
 spine:
@@ -227,7 +227,7 @@ leaf_bgp_defaults:
   - no bgp default ipv4-unicast
   - distance bgp 20 200 200
 
-# Upodate p2p mtu 9000 -> 1500
+# Update p2p mtu 9000 -> 1500
 p2p_uplinks_mtu: 1500
 
 # Adjust default bfd values

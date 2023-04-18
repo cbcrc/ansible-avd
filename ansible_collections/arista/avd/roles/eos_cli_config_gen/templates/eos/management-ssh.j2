@@ -1,4 +1,4 @@
-{# Management SSH #}
+{# eos - management ssh #}
 {% if management_ssh is arista.avd.defined %}
 !
 management ssh
@@ -48,11 +48,15 @@ management ssh
 {%     elif management_ssh.enable is arista.avd.defined(true) %}
    no shutdown
 {%     endif %}
-{%     for vrf in management_ssh.vrfs | arista.avd.natural_sort %}
-   vrf {{ vrf }}
-{%         if management_ssh.vrfs[vrf].enable is arista.avd.defined(true) %}
+{%     if management_ssh.log_level is arista.avd.defined %}
+   log-level {{ management_ssh.log_level }}
+{%     endif %}
+{%     for vrf in management_ssh.vrfs | arista.avd.natural_sort('name') %}
+   !
+   vrf {{ vrf.name }}
+{%         if vrf.enable is arista.avd.defined(true) %}
       no shutdown
-{%         elif management_ssh.vrfs[vrf].enable is arista.avd.defined(false) %}
+{%         elif vrf.enable is arista.avd.defined(false) %}
       shutdown
 {%         endif %}
 {%     endfor %}

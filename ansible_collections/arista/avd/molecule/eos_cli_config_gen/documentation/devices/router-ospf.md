@@ -37,7 +37,7 @@
 
 | Management Interface | description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | -  | - |
+| Management1 | oob_management | oob | MGMT | - | - |
 
 ### Management Interfaces Device Configuration
 
@@ -82,10 +82,10 @@ interface Management1
 !
 interface Ethernet1
    no switchport
-   ip ospf network point-to-point
-   ip ospf area 0.0.0.1
    ip ospf cost 99
+   ip ospf network point-to-point
    ip ospf authentication message-digest
+   ip ospf area 0.0.0.1
    ip ospf message-digest-key 55 md5 7 ABCDEFGHIJKLMNOPQRSTUVWXYZ
 ```
 
@@ -142,14 +142,13 @@ interface Loopback2
 
 | Interface | Description | VRF |  MTU | Shutdown |
 | --------- | ----------- | --- | ---- | -------- |
-| Vlan24 |  -  |  default  |  -  |  -  |
+| Vlan24 | - | default | - | - |
 
 #### IPv4
 
 | Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
 | Vlan24 |  default  |  -  |  -  |  -  |  -  |  -  |  -  |
-
 
 ### VLAN Interfaces Device Configuration
 
@@ -171,7 +170,8 @@ interface Vlan24
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false|
+| default | False |
+
 ### IP Routing Device Configuration
 
 ```eos
@@ -182,21 +182,27 @@ interface Vlan24
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false |
+| default | False |
 
 ## Router OSPF
 
 ### Router OSPF Summary
 
-| Process ID | Router ID | Default Passive Interface | No Passive Interface | BFD | Max LSA | Default Information Originate | Log Adjacency Changes Detail | Auto Cost Reference Bandwidth | Maximum Paths | MPLS LDP Sync Default |
-| ---------- | --------- | ------------------------- | -------------------- | --- | ------- | ----------------------------- | ---------------------------- | ----------------------------- | ------------- | --------------------- |
-| 100 | 192.168.255.3 | enabled | Ethernet1 <br> Ethernet2 <br> Vlan4093 <br> | enabled | 12000 | disabled | disabled | 100 | 10 | True |
-| 101 | 1.0.1.1 | enabled | Ethernet2.101 <br> | disabled | default | disabled | enabled | - | - | - |
-| 200 | 192.168.254.1 | disabled |- | disabled | 5 | Always | enabled | - | - | - |
-| 300 | - | disabled |- | disabled | default | disabled | disabled | - | - | - |
-| 400 | - | disabled |- | disabled | default | disabled | disabled | - | - | - |
-| 500 | - | disabled |- | disabled | default | disabled | disabled | - | - | - |
-| 600 | - | disabled |- | disabled | default | disabled | disabled | - | - | - |
+| Process ID | Router ID | Default Passive Interface | No Passive Interface | BFD | Max LSA | Default Information Originate | Log Adjacency Changes Detail | Auto Cost Reference Bandwidth | Maximum Paths | MPLS LDP Sync Default | Distribute List In |
+| ---------- | --------- | ------------------------- | -------------------- | --- | ------- | ----------------------------- | ---------------------------- | ----------------------------- | ------------- | --------------------- | ------------------ |
+| 100 | 192.168.255.3 | enabled | Ethernet1 <br> Ethernet2 <br> Vlan4093 <br> | enabled<br>(any state) | 12000 | disabled | disabled | 100 | 10 | True | route-map RM-OSPF-DIST-IN |
+| 101 | 1.0.1.1 | enabled | Ethernet2.101 <br> | disabled | default | disabled | enabled | - | - | - | - |
+| 200 | 192.168.254.1 | disabled |- | disabled | 5 | Always | enabled | - | - | - | - |
+| 300 | - | disabled |- | disabled | default | disabled | disabled | - | - | - | - |
+| 400 | - | disabled |- | disabled | default | disabled | disabled | - | - | - | - |
+| 500 | - | disabled |- | disabled | default | disabled | disabled | - | - | - | - |
+| 600 | - | disabled |- | disabled | default | disabled | disabled | - | - | - | - |
+
+### Router OSPF Distance
+
+| Process ID | Intra Area | Inter Area | External |
+| ---------- | ---------- | ---------- | -------- |
+| 100 | 50 | 70 | 60 |
 
 ### Router OSPF Router Redistribution
 
@@ -208,7 +214,6 @@ interface Vlan24
 | 200 | connected | rm-ospf-connected |
 | 200 | static | rm-ospf-static |
 | 200 | bgp | rm-ospf-bgp |
-
 
 ### Router OSPF Router Max-Metric
 
@@ -239,7 +244,7 @@ interface Vlan24
 | Process ID | Area | Area Type | Filter Networks | Filter Prefix List | Additional Options |
 | ---------- | ---- | --------- | --------------- | ------------------ | ------------------ |
 | 200 | 0.0.0.2 | normal | 1.1.1.0/24, 2.2.2.0/24 | - |  |
-| 200 | 0.0.0.3 | normal | - | PL-OSPF-FILTERING |  |
+| 200 | 3 | normal | - | PL-OSPF-FILTERING |  |
 | 600 | 0.0.0.1 | normal | - | - |  |
 | 600 | 0.0.10.11 | stub | - | - | no-summary |
 | 600 | 0.0.20.20 | nssa | - | - |  |
@@ -265,11 +270,18 @@ interface Vlan24
 !
 router ospf 100
    router-id 192.168.255.3
+   distance ospf intra-area 50
+   distance ospf external 60
+   distance ospf inter-area 70
    passive-interface default
    no passive-interface Ethernet1
    no passive-interface Ethernet2
    no passive-interface Vlan4093
+   network 198.51.100.0/24 area 0.0.0.1
+   network 203.0.113.0/24 area 0.0.0.2
    bfd default
+   bfd adjacency state any
+   distribute-list route-map RM-OSPF-DIST-IN in
    max-lsa 12000
    default-information originate
    redistribute static
@@ -297,7 +309,7 @@ router ospf 200 vrf ospf_zone
    router-id 192.168.254.1
    area 0.0.0.2 filter 1.1.1.0/24
    area 0.0.0.2 filter 2.2.2.0/24
-   area 0.0.0.3 filter prefix-list PL-OSPF-FILTERING
+   area 3 filter prefix-list PL-OSPF-FILTERING
    max-lsa 5
    timers lsa rx min interval 100
    default-information originate always

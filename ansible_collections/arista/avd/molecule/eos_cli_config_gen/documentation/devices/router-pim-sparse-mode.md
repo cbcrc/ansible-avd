@@ -12,7 +12,7 @@
   - [IP Routing](#ip-routing)
   - [IPv6 Routing](#ipv6-routing)
 - [Multicast](#multicast)
-  - [Router PIM Sparse Mode](#router-pim-sparse-mode)
+  - [PIM Sparse Mode](#pim-sparse-mode)
 - [Filters](#filters)
 - [ACL](#acl)
 - [Quality Of Service](#quality-of-service)
@@ -33,7 +33,7 @@
 
 | Management Interface | description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | -  | - |
+| Management1 | oob_management | oob | MGMT | - | - |
 
 ### Management Interfaces Device Configuration
 
@@ -69,7 +69,8 @@ interface Management1
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false|
+| default | False |
+
 ### IP Routing Device Configuration
 
 ```eos
@@ -80,45 +81,78 @@ interface Management1
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false |
+| default | False |
 
 # Multicast
 
-## Router PIM Sparse Mode
+## PIM Sparse Mode
 
-### IP Sparse Mode Information
+### Router PIM Sparse Mode
 
-### IP Rendez-vous Information
+#### IP Sparse Mode Information
 
-| Rendez-vous Point Address | Group Address |
-| ------------------------- | ------------- |
-| 10.238.1.161 | 239.12.12.12/32 |
-| 10.238.1.161 | 239.12.12.13/32 |
-| 10.238.1.161 | 239.12.12.14/32 |
-| 10.238.1.161 | 239.12.12.16/32 |
-| 10.238.1.161 | 239.12.12.20/32 |
-| 10.238.1.161 | 239.12.12.21/32 |
+BFD enabled: True
 
-### IP Anycast Information
+##### IP Rendezvous Information
 
-| IP Anycast Address | Other Rendez-vous Point Address | Register Count |
-| ------------------ | ------------------------------- | -------------- |
-| 10.38.1.161 | 10.50.64.16 |  15 | |
+| Rendezvous Point Address | Group Address | Access Lists | Priority | Hashmask | Override |
+| ------------------------ | ------------- | ------------ | -------- | -------- | -------- |
+| 10.238.1.161 | 239.12.12.12/32, 239.12.12.13/32, 239.12.12.14/32, 239.12.12.16/32, 239.12.12.20/32, 239.12.12.21/32 | RP_ACL, RP_ACL2 | 20 | - | - |
 
-### Router Multicast Device Configuration
+##### IP Anycast Information
+
+| IP Anycast Address | Other Rendezvous Point Address | Register Count |
+| ------------------ | ------------------------------ | -------------- |
+| 10.38.1.161 | 10.50.64.16 | 15 |
+
+##### IP Sparse Mode VRFs
+
+| VRF Name | BFD Enabled |
+| -------- | ----------- |
+| MCAST_VRF1 | True |
+| MCAST_VRF2_ALL_GROUPS | False |
+| Test_RP_ACL | False |
+
+| VRF Name | Rendezvous Point Address | Group Address | Access Lists | Priority | Hashmask | Override |
+| -------- | ------------------------ | ------------- | ------------ | -------- | -------- | -------- |
+| MCAST_VRF1 | 10.238.2.161 | 239.12.22.12/32, 239.12.22.13/32, 239.12.22.14/32 | - | - | - | - |
+| MCAST_VRF2_ALL_GROUPS | 10.238.3.161 | - | - | - | 30 | - |
+| Test_RP_ACL | 10.238.4.161 | - | RP_ACL | - | - | - |
+| Test_RP_ACL | 10.238.4.161 | - | RP_ACL2 | 20 | 30 | True |
+
+#### Router Multicast Device Configuration
 
 ```eos
 !
 router pim sparse-mode
    ipv4
-      rp address 10.238.1.161 239.12.12.12/32
-      rp address 10.238.1.161 239.12.12.13/32
-      rp address 10.238.1.161 239.12.12.14/32
-      rp address 10.238.1.161 239.12.12.16/32
-      rp address 10.238.1.161 239.12.12.20/32
-      rp address 10.238.1.161 239.12.12.21/32
+      bfd
+      rp address 10.238.1.161 239.12.12.12/32 priority 20
+      rp address 10.238.1.161 239.12.12.13/32 priority 20
+      rp address 10.238.1.161 239.12.12.14/32 priority 20
+      rp address 10.238.1.161 239.12.12.16/32 priority 20
+      rp address 10.238.1.161 239.12.12.20/32 priority 20
+      rp address 10.238.1.161 239.12.12.21/32 priority 20
+      rp address 10.238.1.161 access-list RP_ACL priority 20
+      rp address 10.238.1.161 access-list RP_ACL2 priority 20
       anycast-rp 10.38.1.161 10.50.64.16 register-count 15
       ssm range standard
+   !
+   vrf MCAST_VRF1
+      ipv4
+         bfd
+         rp address 10.238.2.161 239.12.22.12/32
+         rp address 10.238.2.161 239.12.22.13/32
+         rp address 10.238.2.161 239.12.22.14/32
+   !
+   vrf MCAST_VRF2_ALL_GROUPS
+      ipv4
+         rp address 10.238.3.161 hashmask 30
+   !
+   vrf Test_RP_ACL
+      ipv4
+         rp address 10.238.4.161 access-list RP_ACL
+         rp address 10.238.4.161 access-list RP_ACL2 priority 20 hashmask 30 override
 ```
 
 # Filters

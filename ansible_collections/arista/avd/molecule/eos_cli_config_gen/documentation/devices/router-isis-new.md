@@ -36,7 +36,7 @@
 
 | Management Interface | description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | -  | - |
+| Management1 | oob_management | oob | MGMT | - | - |
 
 ### Management Interfaces Device Configuration
 
@@ -85,10 +85,10 @@ interface Management1
 
 #### ISIS
 
-| Interface | Channel Group | ISIS Instance | ISIS Metric | Mode | ISIS Circuit Type |
-| --------- | ------------- | ------------- | ----------- | ---- | ----------------- |
-| Ethernet1 | - | EVPN_UNDERLAY | 50 | point-to-point | - |
-| Ethernet2 | - | EVPN_UNDERLAY | 50 | point-to-point | - |
+| Interface | Channel Group | ISIS Instance | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | Authentication Mode |
+| --------- | ------------- | ------------- | ----------- | ---- | ----------------- | ------------- | ------------------- |
+| Ethernet1 | - | EVPN_UNDERLAY | 50 | point-to-point | - | - | - |
+| Ethernet2 | - | EVPN_UNDERLAY | 50 | point-to-point | - | - | - |
 
 ### Ethernet Interfaces Device Configuration
 
@@ -138,9 +138,9 @@ interface Ethernet3
 #### ISIS
 
 | Interface | ISIS instance | ISIS metric | Interface mode |
-| -------- | -------- | -------- | -------- |
-| Loopback0 | EVPN_UNDERLAY |  - |  passive |
-| Loopback1 | EVPN_UNDERLAY |  - |  passive |
+| --------- | ------------- | ----------- | -------------- |
+| Loopback0 | EVPN_UNDERLAY | - | passive |
+| Loopback1 | EVPN_UNDERLAY | - | passive |
 
 ### Loopback Interfaces Device Configuration
 
@@ -165,9 +165,9 @@ interface Loopback1
 
 | Interface | Description | VRF |  MTU | Shutdown |
 | --------- | ----------- | --- | ---- | -------- |
-| Vlan110 |  PR01-DEMO  |  TENANT_A_PROJECT01  |  -  |  false  |
-| Vlan4093 |  MLAG_PEER_L3_PEERING  |  default  |  -  |  -  |
-| Vlan4094 |  MLAG_PEER  |  default  |  1500  |  -  |
+| Vlan110 | PR01-DEMO | TENANT_A_PROJECT01 | - | False |
+| Vlan4093 | MLAG_PEER_L3_PEERING | default | - | - |
+| Vlan4094 | MLAG_PEER | default | 1500 | - |
 
 #### IPv4
 
@@ -177,12 +177,11 @@ interface Loopback1
 | Vlan4093 |  default  |  10.255.251.0/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4094 |  default  |  10.255.252.0/31  |  -  |  -  |  -  |  -  |  -  |
 
-
 #### ISIS
 
 | Interface | ISIS Instance | ISIS Metric | Mode |
 | --------- | ------------- | ----------- | ---- |
-| Vlan4093 | EVPN_UNDERLAY |  50 |  point-to-point |
+| Vlan4093 | EVPN_UNDERLAY | 50 | point-to-point |
 
 ### VLAN Interfaces Device Configuration
 
@@ -216,7 +215,8 @@ interface Vlan4094
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false|
+| default | False |
+
 ### IP Routing Device Configuration
 
 ```eos
@@ -227,7 +227,7 @@ interface Vlan4094
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false |
+| default | False |
 
 ## Router ISIS
 
@@ -245,6 +245,16 @@ interface Vlan4094
 | Advertise Passive-only | True |
 | SR MPLS Enabled | True |
 
+### ISIS Route Redistribution
+
+| Route Type | Route-Map | Include Leaked |
+| ---------- | --------- | -------------- |
+| isis instance | RM-REDIS-ISIS-INSTANCE | - |
+| ospf internal | - | - |
+| ospf external | RM-OSPF-EXTERNAL-TO-ISIS | - |
+| ospf nssa-external | RM-OSPF-NSSA_EXT-TO-ISIS | True |
+| static | RM-STATIC-TO-ISIS | True |
+
 ### ISIS Interfaces Summary
 
 | Interface | ISIS Instance | ISIS Metric | Interface Mode |
@@ -254,6 +264,13 @@ interface Vlan4094
 | Vlan4093 | EVPN_UNDERLAY | 50 | point-to-point |
 | Loopback0 | EVPN_UNDERLAY | - | passive |
 | Loopback1 | EVPN_UNDERLAY | - | passive |
+
+### Prefix Segments
+
+| Prefix Segment | Index |
+| -------------- | ----- |
+| 155.2.1.1/32 | 211 |
+| 2001:cafe:155::/64 | 6211 |
 
 ### ISIS IPv4 Address Family Summary
 
@@ -265,6 +282,12 @@ interface Vlan4094
 | TI-LFA Level | level-2 |
 | TI-LFA SRLG Enabled | True |
 | TI-LFA SRLG Strict Mode | True |
+
+### Tunnel Source
+
+| Source Protocol | RCF |
+| --------------- | --- |
+| BGP Labeled-Unicast | lu_2_sr_pfx() |
 
 ### ISIS IPv6 Address Family Summary
 
@@ -282,6 +305,11 @@ interface Vlan4094
 router isis EVPN_UNDERLAY
    net 49.0001.0001.0001.0001.00
    is-type level-2
+   redistribute isis instance route-map RM-REDIS-ISIS-INSTANCE
+   redistribute ospf match internal
+   redistribute ospf match external route-map RM-OSPF-EXTERNAL-TO-ISIS
+   redistribute ospf include leaked match nssa-external route-map RM-OSPF-NSSA_EXT-TO-ISIS
+   redistribute static include leaked route-map RM-STATIC-TO-ISIS
    router-id ipv4 192.168.255.4
    log-adjacency-changes
    mpls ldp sync default
@@ -290,6 +318,7 @@ router isis EVPN_UNDERLAY
    !
    address-family ipv4 unicast
       maximum-paths 4
+      tunnel source-protocol bgp ipv4 labeled-unicast rcf lu_2_sr_pfx()
       fast-reroute ti-lfa mode link-protection level-2
       fast-reroute ti-lfa srlg strict
    !
@@ -300,6 +329,8 @@ router isis EVPN_UNDERLAY
    !
    segment-routing mpls
       no shutdown
+      prefix-segment 155.2.1.1/32 index 211
+      prefix-segment 2001:cafe:155::/64 index 6211
 ```
 
 # Multicast

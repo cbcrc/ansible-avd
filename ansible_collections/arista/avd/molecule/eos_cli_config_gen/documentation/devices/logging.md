@@ -33,7 +33,7 @@
 
 | Management Interface | description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | -  | - |
+| Management1 | oob_management | oob | MGMT | - | - |
 
 ### Management Interfaces Device Configuration
 
@@ -55,10 +55,16 @@ interface Management1
 
 | Type | Level |
 | -----| ----- |
-| Console | error |
+| Console | errors |
 | Buffer | warnings |
 | Trap | disabled |
 | Synchronous | critical |
+
+| Format Type | Setting |
+| ----------- | ------- |
+| Timestamp | traditional year timezone |
+| Hostname | hostname |
+| Sequence-numbers | false |
 
 | VRF | Source Interface |
 | --- | ---------------- |
@@ -73,23 +79,26 @@ interface Management1
 | mgt | 10.10.10.7 | Default | UDP |
 | mgt | 30.30.30.7 | 100, 200 | TCP |
 | mgt | 40.40.40.7 | 300, 400 | UDP |
+| vrf_with_no_source_interface | 1.2.3.4 | Default | UDP |
 
 ### Logging Servers and Features Device Configuration
 
 ```eos
 !
-logging console error
 logging buffered 1000000 warnings
 no logging trap
+logging console errors
 logging synchronous level critical
-logging source-interface Loopback0
 logging host 20.20.20.7
 logging host 50.50.50.7 100 200 protocol tcp
 logging host 60.60.60.7 100 200
-logging vrf mgt source-interface Management0
 logging vrf mgt host 10.10.10.7
 logging vrf mgt host 30.30.30.7 100 200 protocol tcp
 logging vrf mgt host 40.40.40.7 300 400
+logging vrf vrf_with_no_source_interface host 1.2.3.4
+logging format timestamp traditional year timezone
+logging source-interface Loopback0
+logging vrf mgt source-interface Management0
 ```
 
 # Internal VLAN Allocation Policy
@@ -112,7 +121,8 @@ logging vrf mgt host 40.40.40.7 300 400
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false|
+| default | False |
+
 ### IP Routing Device Configuration
 
 ```eos
@@ -123,7 +133,7 @@ logging vrf mgt host 40.40.40.7 300 400
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false |
+| default | False |
 
 # Multicast
 

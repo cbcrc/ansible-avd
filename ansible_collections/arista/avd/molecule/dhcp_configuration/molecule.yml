@@ -46,8 +46,8 @@ platforms:
       - /tmp
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
-  - name: ubuntu18-04
-    image: ubuntu:18.04
+  - name: ubuntu20-04
+    image: ubuntu:20.04
 provisioner:
   name: ansible
   log: true
@@ -56,22 +56,9 @@ provisioner:
       hosts: 'inventory/hosts.yml'
       group_vars: 'inventory/group_vars/'
       host_vars: 'inventory/host_vars/'
-  ansible_args:
-    - --inventory=inventory/hosts.yml
   config_options:
     defaults:
       jinja2_extensions: 'jinja2.ext.loopcontrols,jinja2.ext.do,jinja2.ext.i18n'
       gathering: explicit
 verifier:
   name: ansible
-  inventory:
-    links:
-      hosts: 'inventory/hosts.yml'
-      group_vars: 'inventory/group_vars/'
-      host_vars: 'inventory/host_vars/'
-  ansible_args:
-    - --inventory=inventory/hosts.yml
-  config_options:
-    defaults:
-      jinja2_extensions: 'jinja2.ext.loopcontrols,jinja2.ext.do,jinja2.ext.i18n'
-      gathering: explicit

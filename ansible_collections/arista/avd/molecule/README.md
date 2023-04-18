@@ -48,14 +48,14 @@ $ molecule cleanup --scenario-name <scenario-name>
 
 Testing for `eos_cli_config_gen` is part of [scenario `eos_cli_config_gen`](./eos_cli_config_gen/molecule.yml). It is based on a in flat inventory with 1 host covering a specific section of templates like:
 
-- Ethernet Interfaces defined in [host_vars/ethernet_interfaces](./eos_cli_config_gen/inventory/host_vars/ethernet_interfaces.yml)
-- Loopback Interfaces defined in [host_vars/loopback-interfaces](./eos_cli_config_gen/inventory/host_vars/loopbacks.yml)
+- Ethernet Interfaces defined in [host_vars/ethernet_interfaces](./eos_cli_config_gen/inventory/host_vars/ethernet-interfaces.yml)
+- Loopback Interfaces defined in [host_vars/loopback-interfaces](./eos_cli_config_gen/inventory/host_vars/loopbacks-interfaces.yml)
 - Vlans defined in [host_vars/vlans](./eos_cli_config_gen/inventory/host_vars/vlans.yml)
 
 When you update a template in `eos_cli_config_gen`, you should report a test case in molecule scenario [`ansible_collections/arista/avd/molecule/eos_cli_config_gen`](./eos_cli_config_gen/).
 
 1. Create or update a file related to updated section under `inventory/host_vars`
-2. If section is new, update inventory file to add a new host. Host SHALL be the name of your section and also file in your `host_vars`
+2. If the section is new, update the inventory file ([hosts.ini](eos_cli_config_gen/inventory/hosts.ini)) to add a new host. The host SHALL be the name of your section and also the `<filename>.yml` in your `host_vars`
 3. Run molecule scenario to generate artifacts:
 
 ```bash

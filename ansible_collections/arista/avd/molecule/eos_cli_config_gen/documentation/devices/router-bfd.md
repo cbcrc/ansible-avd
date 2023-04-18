@@ -34,7 +34,7 @@
 
 | Management Interface | description | Type | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | ---- | --- | ------------ | ------------ |
-| Management1 | oob_management | oob | MGMT | -  | - |
+| Management1 | oob_management | oob | MGMT | - | - |
 
 ### Management Interfaces Device Configuration
 
@@ -70,7 +70,8 @@ interface Management1
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false|
+| default | False |
+
 ### IP Routing Device Configuration
 
 ```eos
@@ -81,7 +82,7 @@ interface Management1
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | false |
+| default | False |
 
 # BFD
 
@@ -99,6 +100,12 @@ interface Management1
 | -------- | ---------- | ---------- |
 | 300 | 300 | 3 |
 
+### Router BFD SBFD Summary
+
+| Initiator Interval | Initiator Multiplier | Reflector Minimum RX | Reflector Local-Discriminator |
+| ------------------ | -------------------- | -------------------- | ----------------------------- |
+| 500 | 3 | 600 | 155.1.3.1 |
+
 ### Router BFD Device Configuration
 
 ```eos
@@ -106,6 +113,12 @@ interface Management1
 router bfd
    interval 900 min-rx 900 multiplier 50 default
    multihop interval 300 min-rx 300 multiplier 3
+   !
+   sbfd
+      local-interface Loopback0 ipv4 ipv6
+      initiator interval 500 multiplier 3
+      reflector min-rx 600
+      reflector local-discriminator 155.1.3.1
 ```
 
 # Multicast
