@@ -37,8 +37,18 @@ default_templates:
         options:
           list_merge: "{{ custom_structured_configuration_list_merge }}"
     ip_addressing:
-      python_module: "ansible_collections.arista.avd.roles.eos_designs.python_modules.ip_addressing"
-      python_class_name: "AvdIpAddressing"
+      router_id: 'ip_addressing/router-id-lastoctet.j2'
+      mlag_ip_primary: 'ip_addressing/mlag-ip-primary-fixed.j2'
+      mlag_ip_secondary: 'ip_addressing/mlag-ip-secondary-fixed.j2'
+      mlag_l3_ip_primary: 'ip_addressing/mlag-l3-ip-primary-fixed.j2'
+      mlag_l3_ip_secondary: 'ip_addressing/mlag-l3-ip-secondary-fixed.j2'
+      p2p_uplinks_ip: 'ip_addressing/p2p-uplinks-ip.j2'
+      p2p_uplinks_peer_ip: 'ip_addressing/p2p-uplinks-peer-ip.j2'
+      vtep_ip_mlag: 'ip_addressing/vtep-ip-mlag.j2'
+      vtep_ip: 'ip_addressing/vtep-ip.j2'
+    # ip_addressing:
+    #   python_module: "ansible_collections.arista.avd.roles.eos_designs.python_modules.ip_addressing"
+    #   python_class_name: "AvdIpAddressing"
     interface_descriptions:
       python_module: "ansible_collections.arista.avd.roles.eos_designs.python_modules.interface_descriptions"
       python_class_name: "AvdInterfaceDescriptions"

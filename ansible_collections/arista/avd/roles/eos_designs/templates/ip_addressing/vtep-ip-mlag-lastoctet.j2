@@ -1,14 +1,14 @@
 {%  if switch_data.node_group.nodes.keys() | list | first == inventory_hostname %}
-{%      set mgmt_ip_addr = switch_data.node_group.nodes[inventory_hostname].mgmt_ip | ansible.netcommon.ipaddr("address") %}
+{%      set mgmt_ip_addr = switch_data.node_group.nodes[inventory_hostname].mgmt_ip | ansible.utils.ipaddr("address") %}
 {%      set mlag_primary_id = mgmt_ip_addr.split('.')[3] | int %}
 {%      set mlag_peer_hostname = switch_data.node_group.nodes.keys() | list | last %}
-{%      set mgmt_ip_addr = switch_data.node_group.nodes[mlag_peer_hostname].mgmt_ip | ansible.netcommon.ipaddr('address') %}
+{%      set mgmt_ip_addr = switch_data.node_group.nodes[mlag_peer_hostname].mgmt_ip | ansible.utils.ipaddr('address') %}
 {%      set mlag_secondary_id = mgmt_ip_addr.split('.')[3] | int %}
 {%  elif switch_data.node_group.nodes.keys()| list | last == inventory_hostname %}
-{%      set mgmt_ip_addr = switch_data.node_group.nodes[inventory_hostname].mgmt_ip | ansible.netcommon.ipaddr("address") %}
+{%      set mgmt_ip_addr = switch_data.node_group.nodes[inventory_hostname].mgmt_ip | ansible.utils.ipaddr("address") %}
 {%      set mlag_secondary_id = mgmt_ip_addr.split('.')[3] | int %}
 {%      set mlag_peer_hostname = switch_data.node_group.nodes.keys()| list | first %}
-{%      set mgmt_ip_addr = switch_data.node_group.nodes[mlag_peer_hostname].mgmt_ip | ansible.netcommon.ipaddr('address') %}
+{%      set mgmt_ip_addr = switch_data.node_group.nodes[mlag_peer_hostname].mgmt_ip | ansible.utils.ipaddr('address') %}
 {%      set mlag_primary_id = mgmt_ip_addr.split('.')[3] | int %}
 {%  endif %}
-{{ switch_vtep_loopback_ipv4_pool | ansible.netcommon.ipaddr('network') | ansible.netcommon.ipmath(mlag_primary_id ) }}
+{{ switch_vtep_loopback_ipv4_pool | ansible.utils.ipaddr('network') | ansible.utils.ipmath(mlag_primary_id ) }}

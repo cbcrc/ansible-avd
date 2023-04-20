@@ -1,3 +1,3 @@
-{% set mgmt_ip = switch_data.node.mgmt_ip | ansible.netcommon.ipaddr("address") %}
+{% set mgmt_ip = switch.mgmt_ip | ansible.utils.ipaddr("address") %}
 {% set mgmt_ip_last_octet = mgmt_ip.split('.')[3] | int  %}
-{{ loopback_ipv4_pool | ansible.netcommon.ipaddr("network") | ansible.netcommon.ipmath( mgmt_ip_last_octet ) }}
+{{ loopback_ipv4_pool | ansible.utils.ipaddr("network") | ansible.utils.ipmath( mgmt_ip_last_octet ) }}
