@@ -22,6 +22,9 @@ interface {{ management_interface.name }}
 {%     if management_interface.ip_address is arista.avd.defined %}
    ip address {{ management_interface.ip_address }}
 {%     endif %}
+{%     if management_interface.backup_link is arista.avd.defined %}
+   backup-link {{ management_interface.backup_link }}
+{%     endif %}
 {%     if management_interface.ipv6_enable is arista.avd.defined(true) %}
    ipv6 enable
 {%     endif %}
