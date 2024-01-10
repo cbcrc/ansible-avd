@@ -37,4 +37,7 @@ ptp monitor threshold offset-from-master {{ ptp.monitor.threshold.offset_from_ma
 {%     if ptp.monitor.threshold.mean_path_delay is arista.avd.defined %}
 ptp monitor threshold mean-path-delay {{ ptp.monitor.threshold.mean_path_delay }}
 {%     endif %}
+{%     if ptp.free_run is arista.avd.defined(false) %}
+no ptp free-running
+{%     endif %}
 {% endif %}
