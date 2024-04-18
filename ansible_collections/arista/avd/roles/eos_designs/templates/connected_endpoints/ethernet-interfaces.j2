@@ -17,7 +17,11 @@ ethernet_interfaces:
 {%             set peer = connected_endpoint %}
 {%             for adapter_switch in adapter.switches %}
 {%                 if adapter_switch == inventory_hostname %}
-{%                     set channel_group_id = (adapter.switch_ports[0] | regex_findall("\d") | join) %}
+{%                     if adapter.port_channel.id is arista.avd.defined %}
+{%                         set channel_group_id = adapter.port_channel.id %}
+{%                     else  %}
+{%                         set channel_group_id = (adapter.switch_ports[0] | regex_findall("\d") | join) %}
+{%                     endif %}
 {%                     set peer_interface = endpoint_ports[loop.index0] %}
   {{ adapter.switch_ports[loop.index0] }}:
     peer: {{ peer }}
